@@ -1,6 +1,7 @@
 // Asgard 2021 | Start : 15/12/2021 //
 // Func : Little Moderation, Fun, Info bot, Embed creator, My personal info, Level system (not with exp), help cmds //
 // Asgard : the cleanest and simplist bot for your discord server //
+// Author : Valreyh
 
 //////////////////
 //				//

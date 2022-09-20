@@ -33,7 +33,7 @@ module.exports = {
                 .setAuthor('Asgard - Bot information','https://i.ibb.co/mHdzBj5/GCd0-XNB-Imgur.png','https://discord.com')
                 .setDescription('Asgard, the discord bot designed for begginer')
                 .addFields(
-                    {name : 'Information', value : '__Creator__ : "Vaalreeyh#2626\n__Version__ : 0.0.1\nThis bot is entirely free, but you can help me with a donation'},
+                    {name : 'Information', value : '__Creator__ : "Vaalreeyh#2626\n__Version__ : 1.1.0\nThis bot is entirely free, but you can help me with a donation'},
                     {name : 'Module state', value : `__By default, every modules are activated !__\n\nModeration module state : **[${config.stateModuleModeration}]**\nFun module state : **[${config.stateModuleFun}]**`},
                     {name : 'Embed color', value: `Actual embed color : **#${config.embedColor}**\nTo change the embed color, type **/embedcolor**`},
                     {name : 'Donation', value : 'If you want to help me, you can donate here : **link**'}
