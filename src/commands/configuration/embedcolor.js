@@ -63,7 +63,7 @@ module.exports = {
             jsonWrite(filePath, config);
         } else {
             interaction.reply({
-                content: '**[❌]** Error: The color you chose is not at the Hex format ! (#?????? WITHOUT THE #)',
+                content: '**[❌]** Error: The color you chose is not at the Hex format ! (#XXXXXX WITHOUT THE #)',
                 ephemeral: true
             });
         };

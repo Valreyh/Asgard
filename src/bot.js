@@ -81,6 +81,8 @@ for (const file of funFiles) {
 const moderationFiles = fs.readdirSync('src/commands/moderation').filter(file => file.endsWith('.js'));
 
 console.log('-------------------------');
+
+console.log(token);
 console.log('MODERATION MODULES');
 
 for (const file of moderationFiles) {
@@ -91,8 +93,6 @@ for (const file of moderationFiles) {
 };
 
 console.log('-------------------------');
-
-console.log(token);
 
 client.once('ready', () => {
 	const CLIENT_ID = client.user.id;
@@ -182,7 +182,14 @@ client.on('interactionCreate', interaction => {
 				})
 			} else if(interaction.customId === 'fun_help_modules') {
 				interaction.reply({
-					content: 'FUN MODULES HERE'
+					embeds: [
+						new MessageEmbed()
+						.setColor('WHITE')
+						.setAuthor('Asgard - Modules','https://i.ibb.co/mHdzBj5/GCd0-XNB-Imgur.png','https://discord.com')
+						.addField(
+							{name:'Fun', value: '/ping | Check if the bot respond'})
+						.setFooter('Asgard ⚖ | Link to fund.')
+					]
 				})
 			}
 		}
