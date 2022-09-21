@@ -11,7 +11,7 @@
 
 require("dotenv").config()
 const { REST } = require("@discordjs/rest")
-const { Routes } = require("discord-api-types/v9")
+const { Routes } = require("discord-api-types/v9") 
 const fs = require('fs');
 const { Client, Collection, Intents, MessageEmbed } = require('discord.js');
 
@@ -32,6 +32,8 @@ const client = new Client({
 	] 
 });
 
+var token = process.env.TOKEN;
+
 //////////////////////
 //				    //
 // COMMANDS HANDLER //
@@ -39,8 +41,8 @@ const client = new Client({
 //////////////////////
 
 client.commands = new Collection();
-const configurationFiles = fs.readdirSync('./commands/configuration').filter(file => file.endsWith('.js'));
-const commands = [];
+const configurationFiles = fs.readdirSync('src/commands/configuration').filter(file => file.endsWith('.js'));
+const commands = []; 
 
 console.log('-------------------------');
 console.log('CONFIGURATION MODULES');
@@ -52,7 +54,7 @@ for (const file of configurationFiles) {
 	console.log("[✅]", configuration.data.name, "module activated !");
 };
 
-const infoFiles = fs.readdirSync('./commands/info').filter(file => file.endsWith('.js'));
+const infoFiles = fs.readdirSync('src/commands/info').filter(file => file.endsWith('.js'));
 
 console.log('-------------------------');
 console.log('INFO MODULES');
@@ -64,7 +66,7 @@ for (const file of infoFiles) {
 	console.log("[✅]", info.data.name, "module activated !");
 };
 
-const funFiles = fs.readdirSync('./commands/fun').filter(file => file.endsWith('.js'));
+const funFiles = fs.readdirSync('src/commands/fun').filter(file => file.endsWith('.js'));
 
 console.log('-------------------------');
 console.log('FUN MODULES');
@@ -76,7 +78,7 @@ for (const file of funFiles) {
 	console.log("[✅]", fun.data.name, "module activated !");
 };
 
-const moderationFiles = fs.readdirSync('./commands/moderation').filter(file => file.endsWith('.js'));
+const moderationFiles = fs.readdirSync('src/commands/moderation').filter(file => file.endsWith('.js'));
 
 console.log('-------------------------');
 console.log('MODERATION MODULES');
@@ -90,12 +92,14 @@ for (const file of moderationFiles) {
 
 console.log('-------------------------');
 
+console.log(token);
+
 client.once('ready', () => {
 	const CLIENT_ID = client.user.id;
 
 	const rest = new REST({
 		version: "9"
-	}).setToken(process.env.TOKEN);
+	}).setToken(token);
 
 	(async() => {
 		try {
@@ -190,4 +194,4 @@ client.on('interactionCreate', interaction => {
 //				               //
 /////////////////////////////////
 
-client.login(process.env.TOKEN);
+client.login(token);
