@@ -1,1 +1,3 @@
 # Ignore le fichier environnement
+*.env
+node_modules
