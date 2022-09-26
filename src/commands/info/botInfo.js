@@ -30,14 +30,20 @@ module.exports = {
         interation.reply({
             embeds : [new MessageEmbed()
                 .setColor(`#${config.embedColor}`)
-                .setAuthor('Asgard - Bot information','https://i.ibb.co/mHdzBj5/GCd0-XNB-Imgur.png','https://discord.com')
-                .setDescription('Asgard, the discord bot designed for begginer')
+                .setAuthor({
+                  name:'ASGARD - BOT INFORMATION',
+                  iconURL:'https://i.ibb.co/mHdzBj5/GCd0-XNB-Imgur.png',
+                  url:'https://discord.com'
+                })
+                .setDescription('_Asgard, the simplist discord bot designed for beginners_')
                 .addFields(
-                    {name : 'Information', value : '__Creator__ : "Vaalreeyh#2626\n__Version__ : 1.1.0\nThis bot is entirely free, but you can help me with a donation'},
-                    {name : 'Module state', value : `__By default, every modules are activated !__\n\nModeration module state : **[${config.stateModuleModeration}]**\nFun module state : **[${config.stateModuleFun}]**`},
-                    {name : 'Embed color', value: `Actual embed color : **#${config.embedColor}**\nTo change the embed color, type **/embedcolor**`},
-                    {name : 'Donation', value : 'If you want to help me, you can donate here : **link**'}
+                    {name : ':scales: Information', value : '__Creator__ : "Valreyh#3759\n__Version__ : 1.0.0', inline : true},
+                    {name : ':art: Embed color', value: `Actual embed color : **#${config.embedColor}**`, inline : true},
+                    {name : ':mag_right: Help', value : 'To see every commands of the bot, type `/help`'},
+                    {name : ':moneybag: Donation', value : 'If you want to help me, you can donate here : **link**', inline : true},
                 )
-                .setFooter('Asgard © 2021 | Link to fund.')],
+                .setFooter({
+                  text:'Asgard © 2021 | Link to fund.'
+                })],
     })
 }}

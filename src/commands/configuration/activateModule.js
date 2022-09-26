@@ -4,7 +4,7 @@ const fs = require('fs');
 const path = require('path');
 const filePath = path.resolve(__dirname, '../../config.json');
 
-// helper function to read the JSON file
+// FONCTION POUR LIRE LE FICHIER CONFIG
 function jsonRead(filePath) {
     return new Promise((resolve, reject) => {
       fs.readFile(filePath, 'utf-8', (err, content) => {
@@ -21,7 +21,7 @@ function jsonRead(filePath) {
     });
 }
   
-// helper function to write the JSON file
+// FONCTION POUR ECRIRE DANS LE FICHIER CONFIG
  function jsonWrite(filePath, data) {
     return new Promise((resolve, reject) => {
       fs.writeFile(filePath, JSON.stringify(data), (err) => {
@@ -50,20 +50,37 @@ module.exports = {
     async execute(interaction){
         if (!interaction.member.permissions.has('MANAGE_GUILD') || !interaction.member.permissions.has('ADMINISTRATOR')){
           interaction.reply({
-            content: "**[❌]** **ERROR**: You don't have the `MANAGE_SERVER` or `ADMNISTRATOR` permission !",
+            embeds: [ new MessageEmbed()
+              .setColor('RED')
+              .setDescription('**[❌]** **ERROR**: You need the permission `MANAGE_GUILD` or `ADMINISTRATOR` to use this command !')
+              .setFooter({
+                text: "Asgard ⚖ | Link to fund."
+          })],
             ephemeral : true
           })
         } else {
         let name = interaction.options.getString('modulename');
         if(name === 'ModerationModule'){
-            interaction.reply('**[🚨]** **CONFIG**: Moderation module is set to **ON**');
+            interaction.reply({
+              embeds: [new MessageEmbed()
+                .setColor("GREEN")
+                .setDescription(':shield: **Moderation module is now ACTIVATED 🟢**\n\nYou can see the help of this module by typing `/modulesinfo` and pressing the moderation help button.')
+                .setFooter({
+                  text:"Asgard ⚖ | Link to fund."})
+                ]});
             const config = await jsonRead(filePath);
-            config.stateModuleModeration = 'ON';
+            config.stateModuleModeration = '🟢';
             jsonWrite(filePath, config);
         } else if ( name === 'FunModule'){
-            interaction.reply('**[🚨]** **CONFIG**: Fun module is set to **ON**');
+            interaction.reply({
+              embeds: [new MessageEmbed()
+                .setColor("GREEN")
+                .setDescription(':video_game: **Fun module is now ACTIVATED 🟢**\n\nYou can see the help of this module by typing `/modulesinfo` and pressing the fun help button.')
+                .setFooter({
+                  text:"Asgard ⚖ | Link to fund."})
+            ]});
             const config = await jsonRead(filePath);
-            config.stateModuleFun = "ON";
+            config.stateModuleFun = "🟢";
             jsonWrite(filePath, config);
         }
     }

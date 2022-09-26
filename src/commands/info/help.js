@@ -30,14 +30,20 @@ module.exports = {
         interation.reply({
             embeds : [new MessageEmbed()
                 .setColor(`#${config.embedColor}`)
-                .setAuthor('Asgard - Helps','https://i.ibb.co/mHdzBj5/GCd0-XNB-Imgur.png','https://discord.com')
+                .setAuthor({
+                  name:'ASGARD - HELP',
+                  iconURL:'https://i.ibb.co/mHdzBj5/GCd0-XNB-Imgur.png',
+                  url:'https://discord.com'
+                })
                 .setDescription('Here you can see every commands of the bot')
                 .addFields(
-                    {name : 'Module', value : 'To see every commands of each modules, type **/modulesinfo**\nTo activate or desactivate a module, type **/moduleactivate** or **/moduledesactivate**'},
-                    {name : 'Setup', value : `To setup the bot and all the modules, type **/setupasgard**`},
-                    {name : 'Information', value : 'To see the bot information, like if a module is activated or the embed color, type **/botinfo**'},
-                    {name : 'Embed Color', value : 'To change the embed color, type **/embedcolor <Hex Color WITHOUT THE #>**'}
+                    {name : ':gear: Modules', value : 'To see every commands of each modules, type `/modulesinfo` and press the button of the module you want to see\nTo activate or desactivate a module, type `/moduleactivate` or `/moduledesactivate`'},
+                    {name : ':computer: Setup', value : `To setup the bot and all the modules, type \`/setupasgard\`\nThis is recommended for the first use of the bot`},
+                    {name : ':question: Informations', value : 'To see the bot information, like the embed color or the creator name, type `/botinfo`'},
+                    {name : ':art: Embed Color', value : 'To change the embed color, type `/embedcolor` and follow the instructions'},
                 )
-                .setFooter('Asgard © 2021 | Link to fund.')],
+                .setFooter({
+                  text:'Asgard © 2021 | Link to fund.'
+                  })],
     })
 }}

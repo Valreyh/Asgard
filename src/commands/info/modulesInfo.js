@@ -31,25 +31,45 @@ module.exports = {
         interation.reply({
             embeds : [new MessageEmbed()
                 .setColor(`#${config.embedColor}`)
-                .setAuthor('Asgard - Modules','https://i.ibb.co/mHdzBj5/GCd0-XNB-Imgur.png','https://discord.com')
-                .setDescription('Here you can see every modules that Asgard has right now.\nYou can see the help by pressing the button and activate it by typing \n/moduleactivate <module name>')
+                .setAuthor({
+                  name:'ASGARD - MODULES',
+                  iconURL:'https://i.ibb.co/mHdzBj5/GCd0-XNB-Imgur.png'})
+                .setDescription('Here you can see every modules that Asgard has right now.\nYou can see the help by pressing the button and activate it by typing \n`/moduleactivate` or desactivate it by typing `/moduledesactivate`')
                 .addFields(
-                    {name : 'Moderation', value : 'Module for moderations commands'},
-                    {name : 'Fun', value : 'Module for funs commands'},
-                    {name : 'Role Reaction', value : 'Module for reactions roles commands'},
-                    {name : 'Embed Creator', value : 'Module for creating embeds'},
+                    {name : ':shield:  Moderation', value : `Module for moderations commands. \n\n **Current State ** : ${config.stateModuleModeration}\n\u200B`, inline : true},
+                    {name : ':confetti_ball:  Fun', value : `Module for funs commands \n\n **Current State** : ${config.stateModuleFun}\n\u200B`, inline : true},
+                    {name : ':white_check_mark:  Role Reaction', value : 'Module for reactions roles commands', inline : true},
+                    {name : ':toolbox:  Embed Creator', value : 'Module for creating embeds', inline : true},
                 )
-                .setFooter("Asgard ⚖ | Link to fund.")],
+                .setFooter({
+                  text:"Asgard ⚖ | Link to fund."})],
             components : [new MessageActionRow()
                 .addComponents(
                     new MessageButton()
                         .setCustomId('moderation_help_modules')
                         .setLabel('Moderation Help')
-                        .setStyle('PRIMARY'),
+                        .setStyle('SECONDARY')
+                        .setEmoji('🛡️'),
                     new MessageButton()
                         .setCustomId('fun_help_modules')
                         .setLabel('Fun Help')
-                        .setStyle('PRIMARY'),     
+                        .setStyle('SECONDARY')
+                        .setEmoji('🎊'),
+                    new MessageButton()
+                        .setCustomId('rolereac_help_modules')
+                        .setLabel('Role Reaction Help')
+                        .setStyle('SECONDARY')
+                        .setEmoji('✅'),
+                    new MessageButton()
+                        .setCustomId('embedcreator_help_modules')
+                        .setLabel('Embed Creator Help')
+                        .setStyle('SECONDARY')
+                        .setEmoji('🧰'),
+                    new MessageButton()
+                        .setCustomId('page2_help_modules')
+                        .setLabel('>> Page 2')
+                        .setStyle('SUCCESS')
+                        .setEmoji('➡️'),
                 )
             ],
     });

@@ -48,20 +48,39 @@ module.exports = {
     async execute(interaction){
       if (!interaction.member.permissions.has('MANAGE_GUILD') || !interaction.member.permissions.has('ADMINISTRATOR')){
         interaction.reply({
-          content: "**[❌]** **ERROR**: You don't have the `MANAGE_SERVER` or `ADMNISTRATOR` permission !",
+          embeds: [ new MessageEmbed()
+            .setColor('RED')
+            .setDescription('**[❌]** **ERROR**: You need the permission `MANAGE_GUILD` or `ADMINISTRATOR` to use this command !')
+            .setFooter({
+              text: "Asgard ⚖ | Link to fund."
+        })],
           ephemeral : true
         })
       } else {
         let name = interaction.options.getString('modulename');
         if(name === 'ModerationModule'){
-            interaction.reply('**[🚨]** **CONFIG**: Moderation module is set to **OFF**');
+            interaction.reply({
+                embeds: [ new MessageEmbed()
+                    .setColor('RED')
+                    .setDescription(':shield: **Moderation module is now DESACTIVATED 🔴**')
+                    .setFooter({
+                        text: "Asgard ⚖ | Link to fund."
+                    })
+                  ]});
             const config = await jsonRead(filePath);
-            config.stateModuleModeration = 'OFF';
+            config.stateModuleModeration = '🔴';
             jsonWrite(filePath, config);
         } else if ( name === 'FunModule'){
-            interaction.reply('**[🚨]** **CONFIG**: Fun module is set to **OFF**');
+            interaction.reply({
+                embeds: [ new MessageEmbed()
+                    .setColor('RED')
+                    .setDescription(':confetti_ball: **Fun module is now DESACTIVATED 🔴**')
+                    .setFooter({
+                        text: "Asgard ⚖ | Link to fund."
+                    })
+            ]});
             const config = await jsonRead(filePath);
-            config.stateModuleFun = "OFF";
+            config.stateModuleFun = "🔴";
             jsonWrite(filePath, config);
         }
         }
