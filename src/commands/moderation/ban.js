@@ -21,15 +21,20 @@ function jsonRead(filePath) {
 }
 
 module.exports = {
-    name: 'kick',
-    description: 'Kick une personne du serveur',
+    name: 'ban',
+    description: 'Ban une personne du serveur',
     data: new SlashCommandBuilder()
-        .setName('kick')
-        .setDescription('Kick une personne du serveur !')
+        .setName('ban')
+        .setDescription('Ban une personne du serveur !')
         .addMentionableOption(name => name
             .setName('name')
             .setRequired(true)
-            .setDescription('@ de la personne que vous voulez kick')
+            .setDescription('@ de la personne que vous voulez ban')
+        )
+        .addStringOption(reason => reason
+            .setName('reason')
+            .setRequired(false)
+            .setDescription('Raison du ban')
         ),
     async execute(interaction){
         const config = await jsonRead(filePath);
@@ -44,11 +49,11 @@ module.exports = {
                 ephemeral: true
             })
         }
-        else if (!interaction.member.permissions.has('KICK_MEMBERS') || !interaction.member.permissions.has('ADMINISTRATOR')){
+        else if (!interaction.member.permissions.has('BAN_MEMBERS') || !interaction.member.permissions.has('ADMINISTRATOR')){
             interaction.reply({
                 embeds: [ new MessageEmbed()
                     .setColor('RED')
-                    .setDescription('**[❌]** Vous avez besoin de la permission `KICK DES MEMBRES` ou `ADMINISTRATEUR` pour utiliser cette commande !')
+                    .setDescription('**[❌]** Vous avez besoin de la permission `BANNIR DES MEMBRES` ou `ADMINISTRATEUR` pour utiliser cette commande !')
                     .setFooter({ 
                         text: "Asgard ⚖ | Link to fund.",
                     })],
@@ -60,7 +65,7 @@ module.exports = {
             interaction.reply({
                 embeds: [ new MessageEmbed()
                     .setColor('RED')
-                    .setDescription("**[❌]** **Vous avez besoin d'une rôle plus haut dans la hiéarchie** que la personne que vous voulez kick !")
+                    .setDescription("**[❌]** **Vous avez besoin d'une rôle plus haut dans la hiéarchie** que la personne que vous voulez ban !")
                     .setFooter({ 
                         text: "Asgard ⚖ | Link to fund.",
                     })],
@@ -72,7 +77,7 @@ module.exports = {
             interaction.reply({
                 embeds: [ new MessageEmbed()
                     .setColor('RED')
-                    .setDescription("**[❌]** **Asgard à besoin d'un rôle plus haut dans la hiéarchie** que la personne que vous voulez kick !")
+                    .setDescription("**[❌]** **Asgard à besoin d'un rôle plus haut dans la hiéarchie** que la personne que vous voulez ban !")
                     .setFooter({ 
                         text: "Asgard ⚖ | Link to fund.",
                     })],
@@ -91,19 +96,34 @@ module.exports = {
                         })],
                 });
             } else {
-                interaction.reply({
-                    embeds: [ new MessageEmbed()
-                        .setColor(`#${config.embedColor}`)
-                        .setAuthor({
-                            name: `ASGARD - MODERATION`,
-                            iconURL: 'https://i.ibb.co/mHdzBj5/GCd0-XNB-Imgur.png',
-                        })
-                        .setDescription(`**[:shield:]** ${name} a été kick du serveur !`)
-                        .setFooter({
-                            text: "Asgard ⚖ | Link to fund.",
-                        })],
-                });
-                name.kick(); 
+                if({$reason} === null){
+                    interaction.reply({
+                        embeds: [ new MessageEmbed()
+                            .setColor(`#${config.embedColor}`)
+                            .setAuthor({
+                                name: `ASGARD - MODERATION`,
+                                iconURL: 'https://i.ibb.co/mHdzBj5/GCd0-XNB-Imgur.png',
+                            })
+                            .setDescription(`**[:shield:]** ${name} a été ban du serveur !`)
+                            .setFooter({
+                                text: "Asgard ⚖ | Link to fund.",
+                            })],
+                    });
+                } else {
+                    interaction.reply({
+                        embeds: [ new MessageEmbed()
+                            .setColor(`#${config.embedColor}`)
+                            .setAuthor({
+                                name: `ASGARD - MODERATION`,
+                                iconURL: 'https://i.ibb.co/mHdzBj5/GCd0-XNB-Imgur.png',
+                            })
+                            .setDescription(`**[:shield:]** ${name} a été ban du serveur pour la raison suivante : ${$reason}`)
+                            .setFooter({
+                                text: "Asgard ⚖ | Link to fund.",
+                            })],
+                    });
+                }
+                name.ban(); 
             }
         }
     },

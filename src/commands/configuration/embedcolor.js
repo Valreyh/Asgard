@@ -39,34 +39,46 @@ function isHexColor (hex) {
 module.exports = {
     name: 'changeEmbedColor',
     cooldown: 10000,
-    description: 'Change the embed color of the bot',
+    description: 'Change la couleur des embeds du bot',
     data: new SlashCommandBuilder()
         .setName('embedcolor')
-        .setDescription('Change the embed color of the bot')
+        .setDescription('Change la couleur des embeds du bot')
         .addStringOption(color => color
             .setName('color')
             .setRequired(true)
-            .setDescription('Color you want to have (HEX FORMAT WITHOUT THE #)')
+            .setDescription('La couleur que vous souhaitez (En hexadécimal sans le #)')
         ),
     async execute(interaction){
       if (!interaction.member.permissions.has('MANAGE_GUILD') || !interaction.member.permissions.has('ADMINISTRATOR')){
         interaction.reply({
-          content: "**[❌]** **ERROR**: You don't have the `MANAGE_SERVER` or `ADMNISTRATOR` permission !",
+          content: "**[❌]** Vous avez besoin de la permission `GÉRER LE SERVEUR` ou `ADMNISTRATEUR` pour utiliser cette commande !",
           ephemeral : true
         })
       } else {
         let color = interaction.options.getString('color');
         if(isHexColor(color)){
-            interaction.reply('**[🚨]** Config: Embed color changed !');
+            interaction.reply({
+                embeds: [ new MessageEmbed()
+                    .setColor('GREEN')
+                    .setDescription(`**[✅]** **La couleur des embeds** a été changée avec succès !`)
+                    .setFooter({
+                        text: "Asgard ⚖ | To help me and the bot, use the /vote command"
+                    })],
+            })
             const config = await jsonRead(filePath);
             config.embedColor = color;
             jsonWrite(filePath, config);
         } else {
             interaction.reply({
-                content: '**[❌]** Error: The color you chose is not at the Hex format ! (#XXXXXX WITHOUT THE #)',
-                ephemeral: true
+                embeds: [ new MessageEmbed()
+                    .setColor('RED')
+                    .setDescription(`**[❌]** **La couleur que vous avez chosie** n'est pas au format !`)
+                    .setFooter({
+                        text: "Asgard ⚖ | To help me and the bot, use the /vote command"
+                    })],
+                    ephemeral : true
             });
-        };
+          };
         };
     },
 };

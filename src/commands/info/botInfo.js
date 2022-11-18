@@ -24,26 +24,26 @@ module.exports = {
     name: 'bot_info',
     data : new SlashCommandBuilder()
         .setName("botinfo")
-        .setDescription("Show the bot informations"),
+        .setDescription("Affiche les informations du bot"),
     async execute(interation) {
         const config = await jsonRead(filePath);
         interation.reply({
             embeds : [new MessageEmbed()
                 .setColor(`#${config.embedColor}`)
                 .setAuthor({
-                  name:'ASGARD - BOT INFORMATION',
+                  name:'ASGARD - INFORMATIONS DU BOT',
                   iconURL:'https://i.ibb.co/mHdzBj5/GCd0-XNB-Imgur.png',
                   url:'https://discord.com'
                 })
-                .setDescription('_Asgard, the simplist discord bot designed for beginners_')
+                .setDescription('_Asgard, le bot français simple et multifonction_')
                 .addFields(
-                    {name : ':scales: Information', value : '__Creator__ : "Valreyh#3759\n__Version__ : 1.0.0', inline : true},
-                    {name : ':art: Embed color', value: `Actual embed color : **#${config.embedColor}**`, inline : true},
-                    {name : ':mag_right: Help', value : 'To see every commands of the bot, type `/help`'},
-                    {name : ':moneybag: Donation', value : 'If you want to help me, you can donate here : **link**', inline : true},
+                    {name : ':scales: Information', value : '__Créateur__ : "Valreyh#3759\n__Version__ : 1.0.0', inline : true},
+                    {name : ":art: Couleur de l'embed", value: `Couleur actuelle de l'embed : **#${config.embedColor}**`, inline : true},
+                    {name : ':mag_right: Help', value : "Pour savoir toutes les commandes du bot, faites la commande `/help`"},
+                    {name : ':moneybag: Donation', value : 'Si vous voulez me soutenir, vous pouvez faire un don ici : **link**\nCela permet de maintenir le bot en vie', inline : true},
                 )
                 .setFooter({
-                  text:'Asgard © 2021 | Link to fund.'
+                  text:'Asgard © 2021 | To help me and the bot, use the /vote command'
                 })],
     })
 }}

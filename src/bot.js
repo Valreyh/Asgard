@@ -1,5 +1,5 @@
 // Asgard 2021 | Start : 15/12/2021 //
-// Fonctions : De la modération légère, un module de fun, Info bot, un créateur d'embed, système de niveau, des help commandes //
+// Fonctions : De la modération légère, un module de fun, Info bot, un créateur d'embed, système de notif, système de logs, des help commandes //
 // Asgard : thes simplist bot for your discord server //
 // Auteur : Valreyh
 
@@ -13,7 +13,7 @@ require("dotenv").config()
 const { REST } = require("@discordjs/rest")
 const { Routes } = require("discord-api-types/v9") 
 const fs = require('fs');
-const { Client, Collection, Intents, MessageEmbed, MessageActionRow, MessageButton } = require('discord.js');
+const { Client, Collection, MessageEmbed, MessageActionRow, MessageButton, Intents } = require('discord.js');
 const { Embed } = require("@discordjs/builders");
 
 ///////////////////////////////
@@ -41,10 +41,6 @@ function jsonRead(filePath) {
     });
 }
 
-//Cooldown
-const cooldown = new Set();
-const cooldownListMember = new Set();
-
 /////////////////////////////////
 //					           //
 // ON DEFINIE LE CLIENT DU BOT //
@@ -54,8 +50,10 @@ const cooldownListMember = new Set();
 const client = new Client({ 
 	intents: [
 		Intents.FLAGS.GUILDS,
-		Intents.FLAGS.GUILD_MESSAGES
-	] 
+		Intents.FLAGS.GUILD_MESSAGES,
+		Intents.FLAGS.DIRECT_MESSAGES,
+		Intents.FLAGS.MESSAGE_CONTENT,
+	],
 });
 
 var token = process.env.TOKEN;
@@ -77,7 +75,7 @@ for (const file of configurationFiles) {
 	const configuration = require(`./commands/configuration/${file}`);
 	commands.push(configuration.data.toJSON());
 	client.commands.set(configuration.data.name, configuration);
-	console.log("[✅]", configuration.data.name, "module activated !");
+	console.log("[✅]", configuration.data.name, "command activated !");
 };
 
 const infoFiles = fs.readdirSync('src/commands/info').filter(file => file.endsWith('.js'));
@@ -89,19 +87,19 @@ for (const file of infoFiles) {
 	const info = require(`./commands/info/${file}`);
 	commands.push(info.data.toJSON());
 	client.commands.set(info.data.name, info);
-	console.log("[✅]", info.data.name, "module activated !");
+	console.log("[✅]", info.data.name, "command activated !");
 };
 
-const funFiles = fs.readdirSync('src/commands/fun').filter(file => file.endsWith('.js'));
+const embedCreatorFiles = fs.readdirSync('src/commands/embedcreator').filter(file => file.endsWith('.js'));
 
 console.log('-------------------------');
-console.log('FUN MODULES');
+console.log('EMBED CREATOR MODULE');
 
-for (const file of funFiles) {
-	const fun = require(`./commands/fun/${file}`);
-	commands.push(fun.data.toJSON());
-	client.commands.set(fun.data.name, fun);
-	console.log("[✅]", fun.data.name, "module activated !");
+for (const file of embedCreatorFiles) {
+	const embedCreator = require(`./commands/embedcreator/${file}`);
+	commands.push(embedCreator.data.toJSON());
+	client.commands.set(embedCreator.data.name, embedCreator);
+	console.log("[✅]", embedCreator.data.name, "command activated !");
 };
 
 const moderationFiles = fs.readdirSync('src/commands/moderation').filter(file => file.endsWith('.js'));
@@ -146,11 +144,24 @@ client.once('ready', () => {
 	console.log('[BOT 🔧] Asgard ready !');
 });
 
-//////////////////////////////////////////
-//				                        //
-// INTERACTION SLASH COMMANDS / BUTTONS //
-//				                        //
-//////////////////////////////////////////
+// ON GERE LES EVENTS A UN MESSAGE POSTE
+
+client.on('messageCreate', async message => {
+	const chatFilterEvent = require('./events/chatFilterEvent');
+	chatFilterEvent(message, client);
+});
+
+// ON GERE LES EVENT QUAND ON CREE UNE INTERACTION
+
+client.on('interactionCreate', async interaction => {
+	require('./events/buttonEvent')(interaction, client);
+});
+
+////////////////////////////////
+//				              //
+// INTERACTION SLASH COMMANDS //
+//				              //
+////////////////////////////////
 
 // IF THE COMMAND IS BROKEN //
 
@@ -171,118 +182,6 @@ client.on('interactionCreate', async (interaction) => {
 	 	});
 	}
 });
-
-// INTERACTION AVEC UN BOUTON //
-
-client.on('interactionCreate', async interaction => {
-	if (!interaction.isButton()) return;
-	const config = await jsonRead(filePath);
-	if(interaction.isButton())
-	{
-		// ON CHECK SI LA PERSONNE EST EN COOLDOWN, SI ELLE L'EST PAS, ON L'AJOUTE DANS LA LISTE DES COOLDOWN //
-		if(cooldown.has(interaction.member.id) && !cooldownListMember.has(interaction.member.id)) 
-		{
-			cooldownListMember.add(interaction.member.id);
-			setTimeout(() => {
-				cooldownListMember.delete(interaction.member.id)
-			}, 10000);
-			interaction.reply({ 
-				embeds: [
-					new MessageEmbed()
-					.setColor(`RED`)
-					.setAuthor({
-						name: `ASGARD - COOLDOWN`,
-						iconURL:"https://i.ibb.co/mHdzBj5/GCd0-XNB-Imgur.png"})
-					.setDescription(`**[⌛]** You are in **COOLDOWN**, please wait **10 seconds** before using a button again.`)
-					.setFooter({
-						text: "Asgard ⚖ | Link to fund."
-					})
-				],
-				ephemeral: true
-			});
-		} 
-		// SI COOLDOWN, ON NE FAIT RIEN //
-		else if(cooldown.has(interaction.member.id) && cooldownListMember.has(interaction.member.id)) { return;} 
-		// ON CHECK QUEL BOTON A ETE CLIQUE ET ON AJOUTE LE JOUEUR DANS LA LISTE DU COOLDOWN //
-		else {
-			cooldown.add(interaction.member.id);
-			setTimeout(() => {
-				cooldown.delete(interaction.member.id)
-			}, 10000);
-			if(interaction.customId === "page2_help_modules") 
-			{
-				interaction.reply({
-					embeds: [
-						new MessageEmbed()
-						.setColor(`#${config.embedColor}`)
-						.setAuthor({
-							name: `ASGARD - MODULES`,
-							iconURL:"https://i.ibb.co/mHdzBj5/GCd0-XNB-Imgur.png"})
-						.setDescription('Here you can see every modules that Asgard has right now.\nYou can see the help by pressing the button and activate it by typing \n`/moduleactivate` or deactivate it by typing `/moduledeactivate`')
-                		.addFields(
-                    		{name : ':crossed_swords:  Custom Commands', value : 'Module for the custom commands system', inline : true},
-                    		{name : ':bell: Notifications', value: 'Module for the twitch/youtube notification', inline: true},
-                    		{name : ':page_facing_up: Logs', value: 'Module for the logs system', inline: true},
-						)
-						.setFooter({
-							text: "Asgard ⚖ | Link to fund."})],
-					components: [
-						new MessageActionRow()
-						.addComponents(
-							new MessageButton()
-							.setCustomId('custom_commands_help_modules')
-							.setLabel('Custom Commands')
-							.setStyle('SECONDARY')
-							.setEmoji('⚔'),
-							new MessageButton()
-							.setCustomId('notifications_help_modules')
-							.setLabel('Notifications')
-							.setStyle('SECONDARY')
-							.setEmoji('🔔'),
-							new MessageButton()
-							.setCustomId('logs_help_modules')
-							.setLabel('Logs')
-							.setStyle('SECONDARY')
-							.setEmoji('📄'),
-						),
-					],
-				});
-			}
-			else if(interaction.customId === 'moderation_help_modules') 
-			{
-				interaction.reply({
-					embeds: [
-						new MessageEmbed()
-						.setColor(`#${config.embedColor}`)
-						.setAuthor({
-							name:"ASGARD - MODULES",
-							iconURL:"https://i.ibb.co/mHdzBj5/GCd0-XNB-Imgur.png"})
-						.addFields(
-							{name: 'Moderation', value: '/ban user | Ban the user from the server\n/kick user | Kick the user from the server'}
-						)
-						.setFooter({
-							text:"Asgard ⚖ | Link to fund."})
-					]
-				})
-			} 
-			else if(interaction.customId === 'fun_help_modules') 
-			{
-				interaction.reply({
-					embeds: [
-						new MessageEmbed()
-						.setColor(`#${config.embedColor}`)	
-						.setAuthor({
-							name:"ASGARD - MODULES",
-							iconURL:"https://i.ibb.co/mHdzBj5/GCd0-XNB-Imgur.png"})
-						.addFields(
-							{name:'Fun', value: '/ping | Check if the bot respond'})
-						.setFooter({
-							text:"Asgard ⚖ | Link to fund."})
-					]
-				})
-			}
-		}
-}});
 
 /////////////////////////////////
 //				               //

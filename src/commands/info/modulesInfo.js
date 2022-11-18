@@ -25,7 +25,7 @@ module.exports = {
     name: "modules",
     data : new SlashCommandBuilder()
         .setName("modulesinfo")
-        .setDescription("Shows all modules that Asgard has"),
+        .setDescription("Montre tous les modules qu'Asgard possède et leurs états"),
     async execute (interation) {
         const config = await jsonRead(filePath);
         interation.reply({
@@ -34,35 +34,35 @@ module.exports = {
                 .setAuthor({
                   name:'ASGARD - MODULES',
                   iconURL:'https://i.ibb.co/mHdzBj5/GCd0-XNB-Imgur.png'})
-                .setDescription('Here you can see every modules that Asgard has right now.\nYou can see the help by pressing the button and activate it by typing \n`/moduleactivate` or desactivate it by typing `/moduledesactivate`')
+                .setDescription("Ici, vous pouvez voir tous les modules que Asgard possède.\nVous pouvez obtenir la page d'aide des commandes en cliquant sur le bouton\n mais également l'activé en tapant la commande \n`/moduleactivate` ou le désactivé en tapant la commande `/moduledeactivate`")
                 .addFields(
-                    {name : ':shield:  Moderation', value : `Module for moderations commands. \n\n **Current State ** : ${config.stateModuleModeration}\n\u200B`, inline : true},
-                    {name : ':confetti_ball:  Fun', value : `Module for funs commands \n\n **Current State** : ${config.stateModuleFun}\n\u200B`, inline : true},
-                    {name : ':white_check_mark:  Role Reaction', value : 'Module for reactions roles commands', inline : true},
-                    {name : ':toolbox:  Embed Creator', value : 'Module for creating embeds', inline : true},
+                    {name : ':shield:  Modération', value : `Module pour les commandes de modération. \n\n **État actuel** : ${config.stateModuleModeration}\n\u200B`, inline : true},
+                    {name : ':confetti_ball:  Fun', value : `Module pour les commandes fun \n\n **État actuel** : ${config.stateModuleFun}\n\u200B`, inline : true},
+                    {name : ':white_check_mark:  Réaction de rôle', value : 'Module pour les commandes de réaction de rôle', inline : true},
+                    {name : ":toolbox:  Générateur d'embed", value : "Module pour la création d'embed personalisé", inline : true},
                 )
                 .setFooter({
-                  text:"Asgard ⚖ | Link to fund."})],
+                  text:"Asgard ⚖ | To help me and the bot, use the /vote command"})],
             components : [new MessageActionRow()
                 .addComponents(
                     new MessageButton()
                         .setCustomId('moderation_help_modules')
-                        .setLabel('Moderation Help')
+                        .setLabel('Commandes de modération')
                         .setStyle('SECONDARY')
                         .setEmoji('🛡️'),
                     new MessageButton()
                         .setCustomId('fun_help_modules')
-                        .setLabel('Fun Help')
+                        .setLabel('Commandes fun')
                         .setStyle('SECONDARY')
                         .setEmoji('🎊'),
                     new MessageButton()
                         .setCustomId('rolereac_help_modules')
-                        .setLabel('Role Reaction Help')
+                        .setLabel('Commandes de réaction de rôle')
                         .setStyle('SECONDARY')
                         .setEmoji('✅'),
                     new MessageButton()
                         .setCustomId('embedcreator_help_modules')
-                        .setLabel('Embed Creator Help')
+                        .setLabel('Commandes de générateur d\'embed')
                         .setStyle('SECONDARY')
                         .setEmoji('🧰'),
                     new MessageButton()

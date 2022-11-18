@@ -39,11 +39,11 @@ module.exports = {
     description: 'Activate a bot module',
     data: new SlashCommandBuilder()
         .setName('moduleactivate')
-        .setDescription('Activate a module name')
+        .setDescription('Active un module du bot')
         .addStringOption(modulename => modulename
             .setName('modulename')
             .setRequired(true)
-            .setDescription('Activate a module name')
+            .setDescription('Active un module du bot')
             .addChoice('Moderation', 'ModerationModule')
             .addChoice('Fun', 'FunModule')
         ),
@@ -52,9 +52,9 @@ module.exports = {
           interaction.reply({
             embeds: [ new MessageEmbed()
               .setColor('RED')
-              .setDescription('**[❌]** **ERROR**: You need the permission `MANAGE_GUILD` or `ADMINISTRATOR` to use this command !')
+              .setDescription('**[❌]** **Vous avez besoin** de la permission `GÉRER LE SERVEUR` or `ADMINISTRATEUR` pour utiliser cette commande !')
               .setFooter({
-                text: "Asgard ⚖ | Link to fund."
+                text: "Asgard ⚖ | To help me and the bot, use the /vote command"
           })],
             ephemeral : true
           })
@@ -64,9 +64,9 @@ module.exports = {
             interaction.reply({
               embeds: [new MessageEmbed()
                 .setColor("GREEN")
-                .setDescription(':shield: **Moderation module is now ACTIVATED 🟢**\n\nYou can see the help of this module by typing `/modulesinfo` and pressing the moderation help button.')
+                .setDescription(":shield: **Le module de `modération` est maintenant ACTIVÉ 🟢**\n\nPour avoir la liste des commandes, faites la commande `/modulesinfo` et appuyer sur le bouton d'aide du module modération.")
                 .setFooter({
-                  text:"Asgard ⚖ | Link to fund."})
+                  text:"Asgard ⚖ | To help me and the bot, use the /vote command"})
                 ]});
             const config = await jsonRead(filePath);
             config.stateModuleModeration = '🟢';
@@ -75,9 +75,9 @@ module.exports = {
             interaction.reply({
               embeds: [new MessageEmbed()
                 .setColor("GREEN")
-                .setDescription(':video_game: **Fun module is now ACTIVATED 🟢**\n\nYou can see the help of this module by typing `/modulesinfo` and pressing the fun help button.')
+                .setDescription(":video_game: **Le module du `fun` est maintenant ACTIVÉ 🟢**\n\nPour avoir la liste des commandes, faites la commande `/modulesinfo` et appuyer sur le bouton d'aide du module fun.")
                 .setFooter({
-                  text:"Asgard ⚖ | Link to fund."})
+                  text:"Asgard ⚖ | To help me and the bot, use the /vote command"})
             ]});
             const config = await jsonRead(filePath);
             config.stateModuleFun = "🟢";

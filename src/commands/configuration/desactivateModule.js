@@ -34,14 +34,14 @@ function jsonWrite(filePath, data) {
 module.exports = {
     name: 'desactivatemodule',
     cooldown: 10000,
-    description: 'Desactivate a bot module',
+    description: 'Desactive a bot module',
     data: new SlashCommandBuilder()
         .setName('moduledesactivate')
-        .setDescription('Desactivate a module name')
+        .setDescription('Désactive un module du bot')
         .addStringOption(modulename => modulename
             .setName('modulename')
             .setRequired(true)
-            .setDescription('Activate a module name')
+            .setDescription('Désactive un module du bot')
             .addChoice('Moderation', 'ModerationModule')
             .addChoice('Fun', 'FunModule')
         ),
@@ -50,7 +50,7 @@ module.exports = {
         interaction.reply({
           embeds: [ new MessageEmbed()
             .setColor('RED')
-            .setDescription('**[❌]** **ERROR**: You need the permission `MANAGE_GUILD` or `ADMINISTRATOR` to use this command !')
+            .setDescription('**[❌]** **Vous avez besoin** de la permission `GÉRER LE SERVEUR` or `ADMINISTRATEUR` pour utiliser cette commande !')
             .setFooter({
               text: "Asgard ⚖ | Link to fund."
         })],
@@ -62,7 +62,7 @@ module.exports = {
             interaction.reply({
                 embeds: [ new MessageEmbed()
                     .setColor('RED')
-                    .setDescription(':shield: **Moderation module is now DESACTIVATED 🔴**')
+                    .setDescription(':shield: **Le module de `modération` a été DÉSACTIVÉ 🔴**')
                     .setFooter({
                         text: "Asgard ⚖ | Link to fund."
                     })
@@ -74,9 +74,9 @@ module.exports = {
             interaction.reply({
                 embeds: [ new MessageEmbed()
                     .setColor('RED')
-                    .setDescription(':confetti_ball: **Fun module is now DESACTIVATED 🔴**')
+                    .setDescription(':confetti_ball: **Le module du `fun` a été DÉSACTIVÉ 🔴**')
                     .setFooter({
-                        text: "Asgard ⚖ | Link to fund."
+                        text: "Asgard ⚖ | To help me and the bot, use the /vote command"
                     })
             ]});
             const config = await jsonRead(filePath);
