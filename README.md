@@ -5,9 +5,11 @@
 Un bot **multifonction totalement gratuit** qui à pour but d'aider les nouveaux serveurs et les personnes qui ont du mal avec les bot discord
 Ce bot à pour but d'être **compréhensible et simple d'utilisation**, sans panel web.
 
+Pour le moment, ce bot n'est pas prévu d'être accessible par tout le monde.
+
 L'utilisateur pourra faire la commande `/setupasgard` pour configurer le bot la première fois.
 
-La commande `/help` sera présente pour l'aider, ainsi qu'une **documentation**.
+La commande `/help` sera présente pour l'aider, ainsi qu'une **documentation** qui sera fait sur **gitbook**.
 
 ## Fonctionnalités
 - Système de réaction de rôle
