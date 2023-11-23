@@ -13,7 +13,7 @@ require("dotenv").config()
 const { REST } = require("@discordjs/rest")
 const { Routes } = require("discord-api-types/v9") 
 const fs = require('fs');
-const { Client, Collection, MessageEmbed, MessageActionRow, MessageButton, Intents } = require('discord.js');
+const { Client, Collection, IntentsBitField } = require('discord.js');
 const { Embed } = require("@discordjs/builders");
 
 ///////////////////////////////
@@ -47,14 +47,14 @@ function jsonRead(filePath) {
 //				               //
 /////////////////////////////////
 
-const client = new Client({ 
+const client = new Client({
 	intents: [
-		Intents.FLAGS.GUILDS,
-		Intents.FLAGS.GUILD_MESSAGES,
-		Intents.FLAGS.DIRECT_MESSAGES,
-		Intents.FLAGS.MESSAGE_CONTENT,
+	  IntentsBitField.Flags.Guilds,
+	  IntentsBitField.Flags.GuildMessages,
+	  IntentsBitField.Flags.DirectMessages,
+	  IntentsBitField.Flags.MessageContent,
 	],
-});
+  });
 
 var token = process.env.TOKEN;
 
@@ -67,6 +67,25 @@ var token = process.env.TOKEN;
 client.commands = new Collection();
 const configurationFiles = fs.readdirSync('src/commands/configuration').filter(file => file.endsWith('.js'));
 const commands = []; 
+
+console.log("░░░░░░░░░░░░░░░░░░░░░░░░░░██╗░░░░██╗░░░░░░░░░░░░░░░░░░░░░░░░░░");
+console.log("░░░░░░░░░░░░██████╗██████╗╚██╗░░██╔╝██████╗██████╗░░░░░░░░░░░░");
+console.log("█████╗█████╗╚═════╝╚═════╝░╚██╗██╔╝░╚═════╝╚═════╝█████╗█████╗");
+console.log("╚════╝╚════╝██████╗██████╗░██╔╝╚██╗░██████╗██████╗╚════╝╚════╝");
+console.log("░░░░░░░░░░░░╚═════╝╚═════╝██╔╝░░╚██╗╚═════╝╚═════╝░░░░░░░░░░░░");
+console.log("░░░░░░░░░░░░░░░░░░░░░░░░░░╚═╝░░░░╚═╝░░░░░░░░░░░░░░░░░░░░░░░░░░");
+console.log("      ░█████╗░░██████╗░██████╗░░█████╗░██████╗░██████╗░  ");
+console.log("      ██╔══██╗██╔════╝██╔════╝░██╔══██╗██╔══██╗██╔══██╗  ");
+console.log("      ███████║╚█████╗░██║░░██╗░███████║██████╔╝██║░░██║  ");
+console.log("      ██╔══██║░╚═══██╗██║░░╚██╗██╔══██║██╔══██╗██║░░██║  ");
+console.log("      ██║░░██║██████╔╝╚██████╔╝██║░░██║██║░░██║██████╔╝  ");
+console.log("      ╚═╝░░╚═╝╚═════╝░░╚═════╝░╚═╝░░╚═╝╚═╝░░╚═╝╚═════╝░  ");
+console.log("░░░░░░░░░░░░░░░░░░░░░░░░░░██╗░░░░██╗░░░░░░░░░░░░░░░░░░░░░░░░░░");
+console.log("░░░░░░░░░░░░██████╗██████╗╚██╗░░██╔╝██████╗██████╗░░░░░░░░░░░░");
+console.log("█████╗█████╗╚═════╝╚═════╝░╚██╗██╔╝░╚═════╝╚═════╝█████╗█████╗");
+console.log("╚════╝╚════╝██████╗██████╗░██╔╝╚██╗░██████╗██████╗╚════╝╚════╝");
+console.log("░░░░░░░░░░░░╚═════╝╚═════╝██╔╝░░╚██╗╚═════╝╚═════╝░░░░░░░░░░░░");
+console.log("░░░░░░░░░░░░░░░░░░░░░░░░░░╚═╝░░░░╚═╝░░░░░░░░░░░░░░░░░░░░░░░░░░");
 
 console.log('-------------------------');
 console.log('CONFIGURATION MODULES');
@@ -177,7 +196,7 @@ client.on('interactionCreate', async (interaction) => {
 	} catch (err) {
 		console.error(err);
 		await interaction.reply({ 
-			content: 'There was an error while executing this command!', 
+			content: 'There was an error while executing this command! Contact the bot owner using /botinfo', 
 			ephemeral: true
 	 	});
 	}

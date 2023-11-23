@@ -1,5 +1,5 @@
 const { SlashCommandBuilder } = require("@discordjs/builders");
-const { MessageEmbed } = require('discord.js');
+const { EmbedBuilder } = require('discord.js');
 const fs = require('fs');
 const path = require('path');
 const filePath = path.resolve(__dirname, '../../config.json');
@@ -28,7 +28,7 @@ module.exports = {
     async execute(interation) {
         const config = await jsonRead(filePath);
         interation.reply({
-            embeds : [new MessageEmbed()
+            embeds : [new EmbedBuilder()
                 .setColor(`#${config.embedColor}`)
                 .setAuthor({
                   name:'ASGARD - AIDE',
@@ -43,7 +43,7 @@ module.exports = {
                     {name : ':art: Embed Color', value : 'Pour changer la couleur des embeds, faites la commande `/embedcolor` et suivez les instructions !'},
                 )
                 .setFooter({
-                  text:'Asgard © 2021 | To help me and the bot, use the /vote command'
+                  text:'Asgard © 2021 | Pour toute information, faites la commande /botinfo'
                   })],
     })
 }}

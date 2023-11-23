@@ -1,5 +1,5 @@
 const { SlashCommandBuilder } = require("@discordjs/builders");
-const { MessageEmbed } = require('discord.js');
+const { EmbedBuilder } = require('discord.js');
 const fs = require('fs');
 const path = require('path');
 const filePath = path.resolve(__dirname, '../../config.json');
@@ -48,11 +48,11 @@ module.exports = {
     async execute(interaction){
       if (!interaction.member.permissions.has('MANAGE_GUILD') || !interaction.member.permissions.has('ADMINISTRATOR')){
         interaction.reply({
-          embeds: [ new MessageEmbed()
-            .setColor('RED')
+          embeds: [ new EmbedBuilder()
+            .setColor('#FF0000')
             .setDescription('**[❌]** **Vous avez besoin** de la permission `GÉRER LE SERVEUR` or `ADMINISTRATEUR` pour utiliser cette commande !')
             .setFooter({
-              text: "Asgard ⚖ | Link to fund."
+              text: "Asgard ⚖ | Pour toute information, faites /botinfo"
         })],
           ephemeral : true
         })
@@ -60,11 +60,11 @@ module.exports = {
         let name = interaction.options.getString('modulename');
         if(name === 'ModerationModule'){
             interaction.reply({
-                embeds: [ new MessageEmbed()
-                    .setColor('RED')
+                embeds: [ new EmbedBuilder()
+                    .setColor('#FF0000')
                     .setDescription(':shield: **Le module de `modération` a été DÉSACTIVÉ 🔴**')
                     .setFooter({
-                        text: "Asgard ⚖ | Link to fund."
+                        text: "Asgard ⚖ | Pour toute information, faites /botinfo"
                     })
                   ]});
             const config = await jsonRead(filePath);
@@ -72,11 +72,11 @@ module.exports = {
             jsonWrite(filePath, config);
         } else if ( name === 'FunModule'){
             interaction.reply({
-                embeds: [ new MessageEmbed()
-                    .setColor('RED')
+                embeds: [ new EmbedBuilder()
+                    .setColor('#FF0000')
                     .setDescription(':confetti_ball: **Le module du `fun` a été DÉSACTIVÉ 🔴**')
                     .setFooter({
-                        text: "Asgard ⚖ | To help me and the bot, use the /vote command"
+                        text: "Asgard ⚖ | Pour toute information, faites /botinfo"
                     })
             ]});
             const config = await jsonRead(filePath);

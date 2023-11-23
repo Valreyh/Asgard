@@ -1,5 +1,5 @@
 const { SlashCommandBuilder } = require("@discordjs/builders");
-const { MessageEmbed } = require('discord.js');
+const { EmbedBuilder } = require('discord.js');
 const fs = require('fs');
 const path = require('path');
 const filePath = path.resolve(__dirname, '../../config.json');
@@ -40,22 +40,22 @@ module.exports = {
         const config = await jsonRead(filePath);
         if (config.stateModuleModeration === '🔴'){
             interaction.reply({
-                embeds: [ new MessageEmbed()
-                    .setColor('RED')
+                embeds: [ new EmbedBuilder()
+                    .setColor('#FF0000')
                     .setDescription("**[❌] Le module de modération est désactivé.**\nPour l'activer, utiliser la commande `/moduleactivate` !")
                     .setFooter({
-                        text: "Asgard ⚖ | Link to fund.",
+                        text: "Asgard ⚖ | Pour toute information, faites /botinfo",
                     })],
                 ephemeral: true
             })
         }
         else if (!interaction.member.permissions.has('BAN_MEMBERS') || !interaction.member.permissions.has('ADMINISTRATOR')){
             interaction.reply({
-                embeds: [ new MessageEmbed()
-                    .setColor('RED')
+                embeds: [ new EmbedBuilder()
+                    .setColor('#FF0000')
                     .setDescription('**[❌]** Vous avez besoin de la permission `BANNIR DES MEMBRES` ou `ADMINISTRATEUR` pour utiliser cette commande !')
                     .setFooter({ 
-                        text: "Asgard ⚖ | Link to fund.",
+                        text: "Asgard ⚖ | Pour toute information, faites /botinfo",
                     })],
                 ephemeral: true
             })
@@ -63,11 +63,11 @@ module.exports = {
         else if (interaction.member.roles.highest.rawPosition < interaction.options.getMentionable('name').roles.highest.rawPosition)
         {
             interaction.reply({
-                embeds: [ new MessageEmbed()
-                    .setColor('RED')
+                embeds: [ new EmbedBuilder()
+                    .setColor('#FF0000')
                     .setDescription("**[❌]** **Vous avez besoin d'une rôle plus haut dans la hiéarchie** que la personne que vous voulez ban !")
                     .setFooter({ 
-                        text: "Asgard ⚖ | Link to fund.",
+                        text: "Asgard ⚖ | Pour toute information, faites /botinfo",
                     })],
                 ephemeral: true
             })
@@ -75,11 +75,11 @@ module.exports = {
         else if (interaction.guild.me.roles.highest.rawPosition < interaction.options.getMentionable('name').roles.highest.rawPosition)
         {
             interaction.reply({
-                embeds: [ new MessageEmbed()
-                    .setColor('RED')
+                embeds: [ new EmbedBuilder()
+                    .setColor('#FF0000')
                     .setDescription("**[❌]** **Asgard à besoin d'un rôle plus haut dans la hiéarchie** que la personne que vous voulez ban !")
                     .setFooter({ 
-                        text: "Asgard ⚖ | Link to fund.",
+                        text: "Asgard ⚖ | Pour toute information, faites /botinfo",
                     })],
                 ephemeral: true
             })
@@ -88,17 +88,17 @@ module.exports = {
             let name = interaction.options.getMentionable('name');
             if(!name){
                 interaction.reply({
-                    embeds: [ new MessageEmbed()
-                        .setColor('RED')
+                    embeds: [ new EmbedBuilder()
+                        .setColor('#FF0000')
                         .setDescription("**[❌]** **Cet utilisateur** n'existe pas !")
                         .setFooter({
-                            text: "Asgard ⚖ | Link to fund.",
+                            text: "Asgard ⚖ | Pour toute information, faites /botinfo",
                         })],
                 });
             } else {
                 if({$reason} === null){
                     interaction.reply({
-                        embeds: [ new MessageEmbed()
+                        embeds: [ new EmbedBuilder()
                             .setColor(`#${config.embedColor}`)
                             .setAuthor({
                                 name: `ASGARD - MODERATION`,
@@ -106,12 +106,12 @@ module.exports = {
                             })
                             .setDescription(`**[:shield:]** ${name} a été ban du serveur !`)
                             .setFooter({
-                                text: "Asgard ⚖ | Link to fund.",
+                                text: "Asgard ⚖ | Pour toute information, faites /botinfo",
                             })],
                     });
                 } else {
                     interaction.reply({
-                        embeds: [ new MessageEmbed()
+                        embeds: [ new EmbedBuilder()
                             .setColor(`#${config.embedColor}`)
                             .setAuthor({
                                 name: `ASGARD - MODERATION`,
@@ -119,7 +119,7 @@ module.exports = {
                             })
                             .setDescription(`**[:shield:]** ${name} a été ban du serveur pour la raison suivante : ${$reason}`)
                             .setFooter({
-                                text: "Asgard ⚖ | Link to fund.",
+                                text: "Asgard ⚖ | Pour toute information, faites /botinfo",
                             })],
                     });
                 }

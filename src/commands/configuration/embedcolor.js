@@ -58,11 +58,11 @@ module.exports = {
         let color = interaction.options.getString('color');
         if(isHexColor(color)){
             interaction.reply({
-                embeds: [ new MessageEmbed()
-                    .setColor('GREEN')
+                embeds: [ new EmbedBuilder()
+                    .setColor('#00FF00')
                     .setDescription(`**[✅]** **La couleur des embeds** a été changée avec succès !`)
                     .setFooter({
-                        text: "Asgard ⚖ | To help me and the bot, use the /vote command"
+                        text: "Asgard ⚖ | Pour toute information, faites /botinfo"
                     })],
             })
             const config = await jsonRead(filePath);
@@ -70,11 +70,11 @@ module.exports = {
             jsonWrite(filePath, config);
         } else {
             interaction.reply({
-                embeds: [ new MessageEmbed()
-                    .setColor('RED')
+                embeds: [ new EmbedBuilder()
+                    .setColor('#FF0000')
                     .setDescription(`**[❌]** **La couleur que vous avez chosie** n'est pas au format !`)
                     .setFooter({
-                        text: "Asgard ⚖ | To help me and the bot, use the /vote command"
+                        text: "Asgard ⚖ | Pour toute information, faites /botinfo"
                     })],
                     ephemeral : true
             });

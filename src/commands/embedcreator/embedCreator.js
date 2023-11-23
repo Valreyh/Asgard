@@ -1,5 +1,5 @@
 const { SlashCommandBuilder } = require("@discordjs/builders");
-const { MessageEmbed } = require('discord.js');
+const { EmbedBuilder } = require('discord.js');
 const fs = require('fs');
 const path = require('path');
 const filePath = path.resolve(__dirname, '../../config.json');
@@ -49,20 +49,20 @@ module.exports =
         const title = interaction.options.getString('title');
         const description = interaction.options.getString('description');
         const channel = interaction.client.channels.cache.get(channelId);
-        const embed = new MessageEmbed()
+        const embed = new EmbedBuilder()
             .setTitle(title)
             .setDescription(description)
             .setColor(`${config.embedColor}`)
             .setFooter({
-                text: `Asgard ⚖ | To help me and the bot, use the /vote command`
+                text: `Asgard ⚖ | Pour toute information, faites /botinfo`
             });
         channel.send({ embeds: [embed] });
         interaction.reply({
-            embeds: [new MessageEmbed()
-                .setColor(`${config.embedColor}`)
+            embeds: [new EmbedBuilder()
+                .setColor(`#00FF00`)
                 .setDescription(`**[✅]** **Embed envoyé avec succès dans le salon <#${channelId}> !**`)
                 .setFooter({
-                    text: `Asgard ⚖ | To help me and the bot, use the /vote command.`
+                    text: `Asgard ⚖ | Pour toute information, faites /botinfo`
                 })],
             ephemeral: true
         });

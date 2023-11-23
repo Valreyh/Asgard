@@ -1,5 +1,5 @@
 const { SlashCommandBuilder } = require("@discordjs/builders");
-const { MessageEmbed } = require('discord.js');
+const { EmbedBuilder } = require('discord.js');
 const fs = require('fs');
 const path = require('path');
 const filePath = path.resolve(__dirname, '../../config.json');
@@ -20,8 +20,7 @@ function jsonRead(filePath) {
     });
 }
 
-module.exports =
-{
+module.exports = {
     name: 'rolereaction',
     description: 'Create a role reaction message using a message id and a role mention and a reaction to add',
     cooldown:20000,
@@ -45,4 +44,5 @@ module.exports =
         ),
     async execute(interaction) {
         
+    }
 }

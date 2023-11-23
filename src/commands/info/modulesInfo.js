@@ -1,6 +1,6 @@
 const { SlashCommandBuilder } = require("@discordjs/builders");
-const { MessageEmbed, ButtonInteraction } = require('discord.js');
-const { MessageActionRow, MessageButton } = require('discord.js');
+const { EmbedBuilder, ButtonInteraction } = require('discord.js');
+const { ActionRowBuilder, ButtonBuilder } = require('discord.js');
 const fs = require('fs');
 const path = require('path');
 const filePath = path.resolve(__dirname, '../../config.json');
@@ -29,7 +29,7 @@ module.exports = {
     async execute (interation) {
         const config = await jsonRead(filePath);
         interation.reply({
-            embeds : [new MessageEmbed()
+            embeds : [new EmbedBuilder()
                 .setColor(`#${config.embedColor}`)
                 .setAuthor({
                   name:'ASGARD - MODULES',
@@ -42,33 +42,33 @@ module.exports = {
                     {name : ":toolbox:  Générateur d'embed", value : "Module pour la création d'embed personalisé", inline : true},
                 )
                 .setFooter({
-                  text:"Asgard ⚖ | To help me and the bot, use the /vote command"})],
-            components : [new MessageActionRow()
+                  text:"Asgard ⚖ | Pour toute information, faites la commande /botinfo"})],
+            components : [new ActionRowBuilder()
                 .addComponents(
-                    new MessageButton()
+                    new ButtonBuilder()
                         .setCustomId('moderation_help_modules')
                         .setLabel('Commandes de modération')
-                        .setStyle('SECONDARY')
+                        .setStyle('Secondary')
                         .setEmoji('🛡️'),
-                    new MessageButton()
+                    new ButtonBuilder()
                         .setCustomId('fun_help_modules')
                         .setLabel('Commandes fun')
-                        .setStyle('SECONDARY')
+                        .setStyle('Secondary')
                         .setEmoji('🎊'),
-                    new MessageButton()
+                    new ButtonBuilder()
                         .setCustomId('rolereac_help_modules')
                         .setLabel('Commandes de réaction de rôle')
-                        .setStyle('SECONDARY')
+                        .setStyle('Secondary')
                         .setEmoji('✅'),
-                    new MessageButton()
+                    new ButtonBuilder()
                         .setCustomId('embedcreator_help_modules')
                         .setLabel('Commandes de générateur d\'embed')
-                        .setStyle('SECONDARY')
+                        .setStyle('Secondary')
                         .setEmoji('🧰'),
-                    new MessageButton()
+                    new ButtonBuilder()
                         .setCustomId('page2_help_modules')
                         .setLabel('>> Page 2')
-                        .setStyle('SUCCESS')
+                        .setStyle('Success')
                         .setEmoji('➡️'),
                 )
             ],

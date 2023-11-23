@@ -1,4 +1,4 @@
-const { MessageEmbed, MessageActionRow, MessageButton, Collection} = require('discord.js');
+const { EmbedBuilder, ActionRowBuilder, ButtonBuilder, Collection} = require('discord.js');
 const fs = require('fs');
 const path = require('path');
 const filePath = path.resolve(__dirname, '../config.json');
@@ -39,14 +39,14 @@ module.exports = async (interaction, client) =>
 			}, 10000);
 			interaction.reply({ 
 				embeds: [
-					new MessageEmbed()
-					.setColor(`RED`)
+					new EmbedBuilder()
+					.setColor(`#FF0000`)
 					.setAuthor({
 						name: `ASGARD - COOLDOWN`,
 						iconURL:"https://i.ibb.co/mHdzBj5/GCd0-XNB-Imgur.png"})
 					.setDescription(`**[⌛]** Vous êtes en **COOLDOWN**, merci d'attendre **10 seconds** avant de rappuyer sur un bouton.`)
 					.setFooter({
-						text: "Asgard ⚖ | To help me and the bot, use the /vote command"
+						text: "Asgard ⚖ | Pour toute information, faites /botinfo"
 					})
 				],
 				ephemeral: true
@@ -64,7 +64,7 @@ module.exports = async (interaction, client) =>
 			{
 				interaction.reply({
 					embeds: [
-						new MessageEmbed()
+						new EmbedBuilder()
 						.setColor(`#${config.embedColor}`)
 						.setAuthor({
 							name: `ASGARD - MODULES`,
@@ -78,22 +78,22 @@ module.exports = async (interaction, client) =>
 						.setFooter({
 							text: "Asgard ⚖ | Link to fund."})],
 					components: [
-						new MessageActionRow()
+						new ActionRowBuilder()
 						.addComponents(
-							new MessageButton()
+							new ButtonBuilder()
 							.setCustomId('custom_commands_help_modules')
 							.setLabel('Commandes Personnalisées')
-							.setStyle('SECONDARY')
+							.setStyle('Secondary')
 							.setEmoji('⚔'),
-							new MessageButton()
+							new ButtonBuilder()
 							.setCustomId('notifications_help_modules')
 							.setLabel('Notifications')
-							.setStyle('SECONDARY')
+							.setStyle('Secondary')
 							.setEmoji('🔔'),
-							new MessageButton()
+							new ButtonBuilder()
 							.setCustomId('logs_help_modules')
 							.setLabel('Logs')
-							.setStyle('SECONDARY')
+							.setStyle('Secondary')
 							.setEmoji('📄'),
 						),
 					],
@@ -103,7 +103,7 @@ module.exports = async (interaction, client) =>
 			{
 				interaction.reply({
 					embeds: [
-						new MessageEmbed()
+						new EmbedBuilder()
 						.setColor(`#${config.embedColor}`)
 						.setAuthor({
 							name:"ASGARD - MODULES",
@@ -112,7 +112,7 @@ module.exports = async (interaction, client) =>
 							{name: 'Moderation', value: '/ban user | Ban the user from the server\n/kick user | Kick the user from the server'}
 						)
 						.setFooter({
-							text:"Asgard ⚖ | To help me and the bot, use the /vote command"})
+							text:"Asgard ⚖ | Pour toute information, faites /botinfo"})
 					]
 				})
 			} 
@@ -120,7 +120,7 @@ module.exports = async (interaction, client) =>
 			{
 				interaction.reply({
 					embeds: [
-						new MessageEmbed()
+						new EmbedBuilder()
 						.setColor(`#${config.embedColor}`)	
 						.setAuthor({
 							name:"ASGARD - MODULES",
@@ -128,7 +128,7 @@ module.exports = async (interaction, client) =>
 						.addFields(
 							{name:'Fun', value: '/ping | Check if the bot respond'})
 						.setFooter({
-							text:"Asgard ⚖ | To help me and the bot, use the /vote command"})
+							text:"Asgard ⚖ | Pour toute information, faites /botinfo"})
 					]
 				})
 			}
