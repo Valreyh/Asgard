@@ -72,7 +72,7 @@ module.exports = {
                 ephemeral: true
             })
         }
-        else if (interaction.guild.me.roles.highest.rawPosition < interaction.options.getMentionable('name').roles.highest.rawPosition)
+        else if (interaction.guild.members.me.roles.highest.rawPosition < interaction.options.getMentionable('name').roles.highest.rawPosition)
         {
             interaction.reply({
                 embeds: [ new EmbedBuilder()
@@ -96,7 +96,7 @@ module.exports = {
                         })],
                 });
             } else {
-                if({$reason} === null){
+                if (typeof $reason === "undefined") {
                     interaction.reply({
                         embeds: [ new EmbedBuilder()
                             .setColor(`#${config.embedColor}`)

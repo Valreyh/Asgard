@@ -35,7 +35,7 @@ module.exports = {
                   iconURL:'https://i.ibb.co/mHdzBj5/GCd0-XNB-Imgur.png',
                   url:'https://discord.com'
                 })
-                .setDescription('Here you can see every commands of the bot')
+                .setDescription('Voici toutes les infos concernant Asgard')
                 .addFields(
                     {name : ':gear: Modules', value : 'Pour voir chaque commande de chaque module, faites la commande `/modulesinfo` et appuyer sur le bouton correspondant au module que vous souhaitez voir.\nPour activer ou désactiver un module, faites la commande `/moduleactivate` ou `/moduledesactivate`'},
                     {name : ':computer: Setup', value : `Pour configurer le bot et tout ses modules, faites la commande \`/setupasgard\`\nCette commande est recommandé pour les nouveaux serveurs.`},
@@ -43,7 +43,7 @@ module.exports = {
                     {name : ':art: Embed Color', value : 'Pour changer la couleur des embeds, faites la commande `/embedcolor` et suivez les instructions !'},
                 )
                 .setFooter({
-                  text:'Asgard © 2021 | Pour toute information, faites la commande /botinfo'
+                  text:'Asgard © 2023| Pour toute information, faites la commande /botinfo'
                   })],
     })
 }}

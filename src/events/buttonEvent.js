@@ -108,8 +108,10 @@ module.exports = async (interaction, client) =>
 						.setAuthor({
 							name:"ASGARD - MODULES",
 							iconURL:"https://i.ibb.co/mHdzBj5/GCd0-XNB-Imgur.png"})
+							.setDescription(`_Asgard, le bot français simple et multifonction_\n\n__**Modération :**__\n  \n`)
 						.addFields(
-							{name: 'Moderation', value: '/ban user | Ban the user from the server\n/kick user | Kick the user from the server'}
+							{name: '❌ `Ban`', value: '/ban {utilisateur} [raison] | _Ban un utilisateur du serveur_'},
+							{name: '🚪 `Kick`', value: '/kick {utilisateur} | _Kick un utilisateur du serveur_'}
 						)
 						.setFooter({
 							text:"Asgard ⚖ | Pour toute information, faites /botinfo"})

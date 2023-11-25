@@ -27,6 +27,8 @@ module.exports = {
         .setDescription("Affiche les informations du bot"),
     async execute(interation) {
         const config = await jsonRead(filePath);
+        const botPing = Date.now() - interation.createdTimestamp;
+        const serverCount = interation.client.guilds.cache.size;
         interation.reply({
             embeds : [new EmbedBuilder()
                 .setColor(`#${config.embedColor}`)
@@ -35,9 +37,9 @@ module.exports = {
                   iconURL:'https://i.ibb.co/mHdzBj5/GCd0-XNB-Imgur.png',
                   url:'https://discord.com'
                 })
-                .setDescription('_Asgard, le bot français simple et multifonction_')
+                .setDescription(`_Asgard, le bot français simple et multifonction_\n\n__**Statistiques :**__\n\n> **📊 Bot présent sur ** ${serverCount} serveurs\n> **🟢 Ping du bot:** ${botPing}ms\n\n__**Informations Générales**__`)
                 .addFields(
-                    {name : ':scales: Information', value : '__Créateur__ : valreyh\n__Version__ : 1.0.0', inline : true},
+                    {name : ':scales: Information', value : '__Créateur__ : Valreyh\n__Version__ : 1.0.0', inline : true},
                     {name : ":art: Couleur de l'embed", value: `Couleur actuelle de l'embed : **#${config.embedColor}**`, inline : true},
                     {name : ':mag_right: Help', value : "Pour savoir toutes les commandes du bot, faites la commande `/help`"},
                     {name : ':moneybag: Donation', value : 'Si vous voulez me soutenir, vous pouvez faire un don ici : **link**\nCela permet de maintenir le bot en vie', inline : true},

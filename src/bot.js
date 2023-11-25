@@ -15,6 +15,7 @@ const { Routes } = require("discord-api-types/v9")
 const fs = require('fs');
 const { Client, Collection, IntentsBitField } = require('discord.js');
 const { Embed } = require("@discordjs/builders");
+const moongose = require('mongoose');
 
 ///////////////////////////////
 //				             //
@@ -23,6 +24,7 @@ const { Embed } = require("@discordjs/builders");
 ///////////////////////////////
 
 const path = require('path');
+const { default: mongoose } = require("mongoose");
 const filePath = path.resolve(__dirname, './config.json');
 
 function jsonRead(filePath) {
@@ -121,7 +123,20 @@ for (const file of embedCreatorFiles) {
 	console.log("[✅]", embedCreator.data.name, "command activated !");
 };
 
+const utilityFiles = fs.readdirSync('src/commands/utility').filter(file => file.endsWith('.js'));
+
+console.log('-------------------------');
+console.log('UTILITY MODULE');
+
+for (const file of utilityFiles) {
+	const utility = require(`./commands/utility/${file}`);
+	commands.push(utility.data.toJSON());
+	client.commands.set(utility.data.name, utility);
+	console.log("[✅]", utility.data.name, "command activated !");
+};
+
 const moderationFiles = fs.readdirSync('src/commands/moderation').filter(file => file.endsWith('.js'));
+
 
 console.log('-------------------------');
 console.log('MODERATION MODULES');
@@ -158,9 +173,26 @@ client.once('ready', () => {
 		} catch (err) {
 			if (err) console.error(err)
 		}
+
+		// Database part
+
+		if(!process.env.MONGODB_URL) return;
+
+		await moongose.connect(process.env.MONGODB_URL || '', {
+			useNewUrlParser: true,
+			useUnifiedTopology: true
+		});
+
+		if(mongoose.connect) {
+			console.log('[DB 📁✅] Asgard connected to the database !')
+		} else {
+			console.log('[DB 📁❌] Asgard caannot connect to the database ... !')
+		}
+
 	})();
 
 	console.log('[BOT 🔧] Asgard ready !');
+
 });
 
 // ON GERE LES EVENTS A UN MESSAGE POSTE

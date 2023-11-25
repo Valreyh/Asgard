@@ -36,14 +36,14 @@ function jsonRead(filePath) {
 module.exports = {
     name: 'activatemodule',
     cooldown: 20000,
-    description: 'Activate a bot module',
+    description: 'Active un module ddu bot',
     data: new SlashCommandBuilder()
         .setName('moduleactivate')
         .setDescription('Active un module du bot')
         .addStringOption(modulename => modulename
             .setName('modulename')
             .setRequired(true)
-            .setDescription('Active un module du bot')
+            .setDescription('Le nom du module')
             .addChoice('Moderation', 'ModerationModule')
             .addChoice('Fun', 'FunModule')
         ),

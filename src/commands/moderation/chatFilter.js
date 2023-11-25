@@ -3,6 +3,8 @@ const { EmbedBuilder } = require("discord.js");
 const fs = require('fs');
 const path = require('path');
 const filePath = path.resolve(__dirname, '../../config.json');
+const chatFilterSchema = require('../../db/chatFilterDB');
+const rolesBypassSchema = require('../../db/rolesBypassFilter');
 
 function jsonRead(filePath) {
     return new Promise((resolve, reject) => {
@@ -80,6 +82,11 @@ module.exports = {
         ),
     async execute(interaction){
         const config = await jsonRead(filePath);
+        const subCommand = interaction.options.getSubcommand();
+
+        const wordsList = await chatFilterSchema.find();
+        const roleBypassList = await rolesBypassSchema.find();
+
         if (config.stateModuleModeration === '🔴'){
             interaction.reply({
                 embeds: [ new EmbedBuilder()
@@ -91,7 +98,7 @@ module.exports = {
                 ephemeral: true
             })
         }
-        else if (!interaction.member.permissions.has('MANAGE_MESSAGES') || !interaction.member.permissions.has('ADMINISTRATOR')){
+        else if (!interaction.member.permissions.has('MANAGE_MESSAGES') || !interaction.member.permissions.has('ADMINISTRATOR') && subCommand != "liste"){
             interaction.reply({
                 embeds: [ new EmbedBuilder()
                     .setColor('#FF0000')
@@ -106,22 +113,33 @@ module.exports = {
         {
             const subCommand = interaction.options.getSubcommand();
             if(subCommand === 'liste'){
+
+                var wordValues = [];
+                await wordsList.forEach(async w => {
+                    wordValues.push(w.word);
+                })
+
+                var roleBypassValues = [];
+                await roleBypassList.forEach(async r => {
+                    roleBypassValues.push(r.roleID)
+                })
+
                 interaction.reply({
                     embeds: [ new EmbedBuilder()
                         .setColor(`#${config.embedColor}`)
                         .setTitle('Liste des mots interdits et des rôles exemptés du filtre')
-                        .setDescription(`**Mots interdits :**\n${config.chatFilter.join(', ')}\n\n**Rôles exemptés :**\n${config.chatFilterRoleException.map(role => role.name).join(', ')}`)
+                        .setDescription(`**Mots interdits :**\n${wordValues.join('\n')}\n\n**Rôles exemptés :**\n${roleBypassValues.map(role => role.name).join('\n')}`)
                         .setFooter({
                             text: "Asgard ⚖ | Pour toute information, faites /botinfo",
                         })],
             })}
             else if (subCommand === 'ajoutermot'){
-                const word = interaction.options.getString('mot');
-                if (config.chatFilter.includes(word)){
+                const wordToAdd = interaction.options.getString('mot');
+                if (await chatFilterSchema.findOne({word: wordToAdd})){
                     interaction.reply({
                         embeds: [ new EmbedBuilder()
                             .setColor('#FF0000')
-                            .setDescription(`**[❌] Le mot \`${word}\` **est déjà dans la liste des mots interdits.`)
+                            .setDescription(`**[❌] Le mot \`${wordToAdd}\` **est déjà dans la liste des mots interdits.`)
                             .setFooter({ 
                                 text: "Asgard ⚖ | Pour toute information, faites /botinfo",
                             })],
@@ -129,12 +147,14 @@ module.exports = {
                     })
                 }
                 else{
-                    config.chatFilter.push(word);
-                    await jsonWrite(filePath, config);
+                    await chatFilterSchema.create({
+                        word: wordToAdd
+                    })
+
                     interaction.reply({
                         embeds: [ new EmbedBuilder()
                             .setColor('#00FF00')
-                            .setDescription(`**[✅] Le mot \`${word}\`** a été ajouté à la liste des mots interdits.`)
+                            .setDescription(`**[✅] Le mot \`${wordToAdd}\`** a été ajouté à la liste des mots interdits.`)
                             .setFooter({ 
                                 text: "Asgard ⚖ | Pour toute information, faites /botinfo",
                             })],
@@ -142,12 +162,12 @@ module.exports = {
                 }
             }
             else if (subCommand === 'retirermot'){
-                const word = interaction.options.getString('mot');
-                if (!config.chatFilter.includes(word)){
+                const wordToDelete = interaction.options.getString('mot');
+                if (!chatFilterSchema.findOne({word: wordToDelete})){
                     interaction.reply({
                         embeds: [ new EmbedBuilder()
                             .setColor('#FF0000')
-                            .setDescription(`**[❌] Le mot \`${word}\`** n'est pas dans la liste des mots interdits.`)
+                            .setDescription(`**[❌] Le mot \`${wordToDelete}\`** n'est pas dans la liste des mots interdits.`)
                             .setFooter({ 
                                 text: "Asgard ⚖ | Pour toute information, faites /botinfo",
                             })],
@@ -155,8 +175,10 @@ module.exports = {
                     })
                 }
                 else{
-                    config.chatFilter.splice(config.chatFilter.indexOf(word), 1);
-                    jsonWrite(filePath, config);
+                    await wordsList.forEach(async w => {
+                        await chatFilterSchema.deleteOne({word: wordToDelete});
+                    })
+
                     interaction.reply({
                         embeds: [ new EmbedBuilder()
                             .setColor('00FF00')
@@ -168,12 +190,12 @@ module.exports = {
                 }
             }
             else if (subCommand === 'ajouterrole'){
-                const role = interaction.options.getRole('role');
-                if (config.chatFilterRoleException.includes(role.id)){
+                const roleToAdd = interaction.options.getString('role');
+                if (await chatFilterSchema.findOne({roleID: roleToAdd})){
                     interaction.reply({
                         embeds: [ new EmbedBuilder()
                             .setColor('#FF0000')
-                            .setDescription(`**[❌] Le rôle \`${role.name}\`** est déjà dans la liste des rôles exemptés du filtre.`)
+                            .setDescription(`**[❌] Le rôle \`${roleToAdd.name}\`** est déjà dans la liste des rôles exemptés du filtre.`)
                             .setFooter({
                                 text: "Asgard ⚖ | Pour toute information, faites /botinfo",
                             })],
@@ -182,12 +204,14 @@ module.exports = {
                 }
                 else
                 {
-                    config.chatFilterRoleException.push(role.id);
+                    await chatFilterSchema.create({
+                        roleID: role.id
+                    })
                     jsonWrite(filePath, config);
                     interaction.reply({
                         embeds: [ new EmbedBuilder()
                             .setColor('00FF00')
-                            .setDescription(`**[✅] Le rôle \`${role.name}\`** a été ajouté à la liste des rôles exemptés du filtre.`)
+                            .setDescription(`**[✅] Le rôle \`${roleToAdd.name}\`** a été ajouté à la liste des rôles exemptés du filtre.`)
                             .setFooter({
                                 text: "Asgard ⚖ | Pour toute information, faites /botinfo",
                             })],
@@ -195,12 +219,12 @@ module.exports = {
                 }
             }
             else if (subCommand === 'retirerrole'){
-                const role = interaction.options.getRole('role');
-                if (!config.chatFilterRoleException.includes(role.id)){
+                const roleToDelete = interaction.options.getString('role');
+                if (await roleBypassList.findOne({roleID: roleToDelete})){
                     interaction.reply({
                         embeds: [ new EmbedBuilder()
                             .setColor('#FF0000')
-                            .setDescription(`**[❌] Le rôle \`${role.name}\`** n'est pas dans la liste des rôles exemptés du filtre.`)
+                            .setDescription(`**[❌] Le rôle \`${roleToDelete.name}\`** n'est pas dans la liste des rôles exemptés du filtre.`)
                             .setFooter({
                                 text: "Asgard ⚖ | Pour toute information, faites /botinfo",
                             })],
@@ -209,8 +233,10 @@ module.exports = {
                 }
                 else
                 {
-                    config.chatFilterRoleException.splice(config.chatFilterRoleException.indexOf(role.id), 1);
-                    jsonWrite(filePath, config);
+                    await roleBypassList.forEach(async r => {
+                        await rolesBypassSchema.deleteOne({roleID: roleToDelete});
+                    })
+
                     interaction.reply({
                         embeds: [ new EmbedBuilder()
                             .setColor('#00FF00')

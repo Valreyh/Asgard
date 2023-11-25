@@ -3,6 +3,9 @@ const fs = require('fs');
 const path = require('path');
 const filePath = path.resolve(__dirname, '../config.json');
 
+const chatFilterSchema = require('../db/chatFilterDB');
+const rolesBypassSchema = require('../db/rolesBypassFilter');
+
 // FONCTION POUR LIRE LE FICHIER CONFIG
 function jsonRead(filePath) {
     return new Promise((resolve, reject) => {
@@ -25,26 +28,41 @@ const cooldowns = new Map();
 module.exports = async (message, client) => {
     if (message.author.bot) return;
 
-    const config = await jsonRead(filePath);
-    const badWords = config.chatFilter;
-    const rolesExcepted = config.chatFilterRoleException;
     const userCooldown = cooldowns.get(message.author.id);
 
-    if (userCooldown && (Date.now() - userCooldown) < 60000) {
-        message.delete();
-        return;
+    const wordsListDB = await chatFilterSchema.find();
+    const roleBypassListDB = await rolesBypassSchema.find();
+
+    var wordsList = [];
+    await wordsListDB.forEach(async w => {
+        wordsList.push(w.word);
+    })
+
+    var roleBypassList = [];
+    await roleBypassListDB.forEach(async r => {
+        roleBypassList.push(r.roleID)
+    })
+
+    if (userCooldown && (Date.now() - userCooldown) < 10000) {
+        for (let i = 0; i < wordsList.length; i++) {
+            if(message.content.toLowerCase().includes(wordsList[i].toLowerCase()))
+            {
+                message.delete();
+                return;
+            }
+        }
     }
 
-    if (message.member.roles.cache.some(role => rolesExcepted.includes(role.id))) return;
+    if (message.member.roles.cache.some(role => roleBypassList.includes(role.id))) return;
 
-    for (let i = 0; i < badWords.length; i++) {
-        if (message.content.toLowerCase().includes(badWords[i].toLowerCase())) {
+    for (let i = 0; i < wordsList.length; i++) {
+        if (message.content.toLowerCase().includes(wordsList[i].toLowerCase())) {
             const user = message.author;
             const guild = message.guild;
 
             const embed = new EmbedBuilder()
                 .setColor('#FF0000')
-                .setDescription(`**[❌] ${user.toString()} Ton message a été supprimé** car il contenait un mot interdit.\nPour connaître la liste des mots interdits, tapez \`/chatfilter liste\``)
+                .setDescription(`**[❌] ${user.toString()} Ton message a été supprimé** car il contenait un mot interdit.\nPour connaître la liste des mots interdits, tapez \`/chatfilter liste\` dans le serveur correspondant !`)
                 .setFooter({
                     text: `Asgard ⚖ | Pour toute information, faites la commande /botinfo`,
                 });
@@ -75,7 +93,7 @@ module.exports = async (message, client) => {
             cooldowns.set(message.author.id, Date.now());
             setTimeout(() => {
                 cooldowns.delete(message.author.id);
-            }, 60000); // 60 secondes de cooldown
+            }, 10000); // 10 secondes de cooldown
             break;
         }
     }

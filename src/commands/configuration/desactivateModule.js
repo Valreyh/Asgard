@@ -34,7 +34,7 @@ function jsonWrite(filePath, data) {
 module.exports = {
     name: 'desactivatemodule',
     cooldown: 10000,
-    description: 'Desactive a bot module',
+    description: 'Désactive un module du bot"',
     data: new SlashCommandBuilder()
         .setName('moduledesactivate')
         .setDescription('Désactive un module du bot')

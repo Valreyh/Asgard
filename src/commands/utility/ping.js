@@ -21,13 +21,14 @@ function jsonRead(filePath) {
 
 module.exports = {
     name: 'ping',
+    cooldown: 5000,
     data : new SlashCommandBuilder()
         .setName("ping")
-        .setDescription("Send Pong ! Use for test"),
+        .setDescription("Test la réactivité du bot"),
     async execute(interation) {
         const config = await jsonRead(filePath);
         if (config.stateModuleFun === 'OFF'){
-            interation.reply('**[❌]** **ERROR**: Fun module is disabled !')
+            interation.reply('**[❌]** **Erreur**: Le module **utility** est désactivé !')
         } else {
         interation.reply("Pong !");
         }
