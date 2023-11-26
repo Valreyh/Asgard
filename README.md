@@ -13,9 +13,10 @@ L'utilisateur pourra faire la commande `/setupasgard` pour configurer le bot la 
 La commande `/help` sera présente pour de l'aide, ainsi qu'une **documentation** qui sera fait sur **gitbook**.
 
 ## Fonctionnalités
-- Système de réaction de rôle
+- Système de réaction de rôle (5 réaction maximum pour le moment)
 - Système de création et envoie d'embed au travers le bot
-- (WIP) Un système de notification pour 1 youtuber et 1 streamer
-- Un système de filtre de chat
+- (WIP) Un système de notification pour 1 youtuber
+- Un système de filtre de chat (5 mots maximum)
 - Système de modération et d'utilitaire
+- Système de message de bienvenue et de leave du serveur
 
