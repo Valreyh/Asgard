@@ -1,7 +1,9 @@
 const { SlashCommandBuilder } = require("@discordjs/builders");
+const { EmbedBuilder } = require('discord.js')
 const fs = require('fs');
 const path = require('path');
 const filePath = path.resolve(__dirname, '../../config.json');
+const customEmbedColorSchema = require('../../schemas/customEmbedColorDB')
 
 function jsonRead(filePath) {
     return new Promise((resolve, reject) => {
@@ -65,9 +67,12 @@ module.exports = {
                         text: "Asgard ⚖ | Pour toute information, faites /botinfo"
                     })],
             })
-            const config = await jsonRead(filePath);
-            config.embedColor = color;
-            jsonWrite(filePath, config);
+            
+            await customEmbedColorSchema.create({
+              Guild: interaction.guild.id,
+              Color: color
+          });
+
         } else {
             interaction.reply({
                 embeds: [ new EmbedBuilder()

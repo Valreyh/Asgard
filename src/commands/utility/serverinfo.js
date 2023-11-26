@@ -3,6 +3,7 @@ const { EmbedBuilder } = require('discord.js');
 const fs = require('fs');
 const path = require('path');
 const filePath = path.resolve(__dirname, '../../config.json');
+const customEmbedColorSchema = require('../../schemas/customEmbedColorDB');
 
 function jsonRead(filePath) {
     return new Promise((resolve, reject) => {
@@ -20,9 +21,6 @@ function jsonRead(filePath) {
     });
 }
 
-const cooldown = new Map();
-const cooldownListMember = new Set();
-
 module.exports = {
     name: 'serverinfo',
     cooldown: 10000,
@@ -34,26 +32,27 @@ module.exports = {
       const server = interaction.guild;
       const roles = server.roles.cache;
       const owner = await server.members.fetch(server.ownerId);
+      const customEmbedColor = customEmbedColorSchema.findOne({Guild: interaction.guild.id})
       if (owner) {
           return interaction.reply({
               embeds: [
                   new EmbedBuilder()
-                      .setColor(`#${config.embedColor || "FF0000"}`)
-                      .setAuthor({
-                          name: 'ASGARD - INFOS DU SERVEUR',
-                          iconURL: 'https://i.ibb.co/mHdzBj5/GCd0-XNB-Imgur.png',
-                          url: 'https://discord.com'
-                      })
-                      .setDescription(`**📝 Nom du serveur :** ${server.name}
+                    .setColor(`#${customEmbedColor.Color || "000000"}`)
+                    .setAuthor({
+                        name: 'ASGARD - INFOS DU SERVEUR',
+                        iconURL: 'https://i.ibb.co/mHdzBj5/GCd0-XNB-Imgur.png',
+                        url: 'https://discord.com'
+                    })
+                    .setDescription(`**📝 Nom du serveur :** ${server.name}
                         **🔎 ID du serveur :** ${server.id}
                         **👑 Créateur du serveur :** ${owner.user.tag}
                         **📅 Date de création :** ${server.createdAt.toUTCString()}
                         **👤 Membres :** ${server.memberCount}
                         **👔 Nombre de rôles :** ${roles.size} rôles`
-                            )
-                      .setFooter({
-                          text: 'Asgard © 2023 | Pour toute information, faites la commande /botinfo'
-                      })
+                    )
+                    .setFooter({
+                        text: 'Asgard © 2023 | Pour toute information, faites la commande /botinfo'
+                    })
               ]
           });
       } else {

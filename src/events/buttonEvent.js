@@ -2,6 +2,7 @@ const { EmbedBuilder, ActionRowBuilder, ButtonBuilder, Collection} = require('di
 const fs = require('fs');
 const path = require('path');
 const filePath = path.resolve(__dirname, '../config.json');
+const customEmbedColorSchema = require('../schemas/customEmbedColorDB');
 
 // FONCTION POUR LIRE LE FICHIER CONFIG
 function jsonRead(filePath) {
@@ -60,12 +61,15 @@ module.exports = async (interaction, client) =>
 			setTimeout(() => {
 				cooldown.delete(interaction.member.id)
 			}, 10000);
+
+			const customEmbedColor = await customEmbedColorSchema.findOne({Guild: interaction.guild.id})
+
 			if(interaction.customId === "page2_help_modules") 
 			{
 				interaction.reply({
 					embeds: [
 						new EmbedBuilder()
-						.setColor(`#${config.embedColor}`)
+						.setColor(`#${customEmbedColor ? customEmbedColor.Color : "000000"}`)
 						.setAuthor({
 							name: `ASGARD - MODULES`,
 							iconURL:"https://i.ibb.co/mHdzBj5/GCd0-XNB-Imgur.png"})
@@ -104,7 +108,7 @@ module.exports = async (interaction, client) =>
 				interaction.reply({
 					embeds: [
 						new EmbedBuilder()
-						.setColor(`#${config.embedColor}`)
+						.setColor(`#${customEmbedColor ? customEmbedColor.Color : "000000"}`)
 						.setAuthor({
 							name:"ASGARD - MODULES",
 							iconURL:"https://i.ibb.co/mHdzBj5/GCd0-XNB-Imgur.png"})
@@ -123,7 +127,7 @@ module.exports = async (interaction, client) =>
 				interaction.reply({
 					embeds: [
 						new EmbedBuilder()
-						.setColor(`#${config.embedColor}`)	
+						.setColor(`#${customEmbedColor ? customEmbedColor.Color : "000000"}`)
 						.setAuthor({
 							name:"ASGARD - MODULES",
 							iconURL:"https://i.ibb.co/mHdzBj5/GCd0-XNB-Imgur.png"})

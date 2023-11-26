@@ -3,8 +3,8 @@ const fs = require('fs');
 const path = require('path');
 const filePath = path.resolve(__dirname, '../config.json');
 
-const chatFilterSchema = require('../db/chatFilterDB');
-const rolesBypassSchema = require('../db/rolesBypassFilter');
+const chatFilterSchema = require('../schemas/chatFilterDB');
+const rolesBypassSchema = require('../schemas/rolesBypassFilterDB');
 
 // FONCTION POUR LIRE LE FICHIER CONFIG
 function jsonRead(filePath) {
@@ -30,18 +30,20 @@ module.exports = async (message, client) => {
 
     const userCooldown = cooldowns.get(message.author.id);
 
-    const wordsListDB = await chatFilterSchema.find();
-    const roleBypassListDB = await rolesBypassSchema.find();
+    const wordsListDB = await chatFilterSchema.find({ Guild: message.guild.id });
+    const roleBypassListDB = await rolesBypassSchema.find({ Guild: message.guild.id });
 
     var wordsList = [];
     await wordsListDB.forEach(async w => {
-        wordsList.push(w.word);
+        wordsList.push(w.Word);
     })
 
     var roleBypassList = [];
     await roleBypassListDB.forEach(async r => {
-        roleBypassList.push(r.roleID)
+        roleBypassList.push(r.RoleID)
     })
+
+    if(wordsList.length === 0) return;
 
     if (userCooldown && (Date.now() - userCooldown) < 10000) {
         for (let i = 0; i < wordsList.length; i++) {

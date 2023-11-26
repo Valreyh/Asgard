@@ -3,6 +3,7 @@ const { EmbedBuilder } = require('discord.js');
 const fs = require('fs');
 const path = require('path');
 const filePath = path.resolve(__dirname, '../../config.json');
+const customEmbedColorSchema = require('../../schemas/customEmbedColorDB')
 
 function jsonRead(filePath) {
     return new Promise((resolve, reject) => {
@@ -96,10 +97,11 @@ module.exports = {
                         })],
                 });
             } else {
+                const customEmbedColor = await customEmbedColorSchema.findOne({Guild: interaction.guild.id})
                 if (typeof $reason === "undefined") {
                     interaction.reply({
                         embeds: [ new EmbedBuilder()
-                            .setColor(`#${config.embedColor}`)
+                            .setColor(`#${customEmbedColor ? customEmbedColor.Color : "000000"}`)
                             .setAuthor({
                                 name: `ASGARD - MODERATION`,
                                 iconURL: 'https://i.ibb.co/mHdzBj5/GCd0-XNB-Imgur.png',
@@ -112,7 +114,7 @@ module.exports = {
                 } else {
                     interaction.reply({
                         embeds: [ new EmbedBuilder()
-                            .setColor(`#${config.embedColor}`)
+                            .setColor(`#${customEmbedColor ? customEmbedColor.Color : "000000"}`)
                             .setAuthor({
                                 name: `ASGARD - MODERATION`,
                                 iconURL: 'https://i.ibb.co/mHdzBj5/GCd0-XNB-Imgur.png',

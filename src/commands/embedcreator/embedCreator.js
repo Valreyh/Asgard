@@ -3,6 +3,7 @@ const { EmbedBuilder } = require('discord.js');
 const fs = require('fs');
 const path = require('path');
 const filePath = path.resolve(__dirname, '../../config.json');
+const customEmbedColorSchema = require('../../schemas/customEmbedColorDB')
 
 function jsonRead(filePath) {
     return new Promise((resolve, reject) => {
@@ -49,10 +50,11 @@ module.exports =
         const title = interaction.options.getString('title');
         const description = interaction.options.getString('description');
         const channel = interaction.client.channels.cache.get(channelId);
+        const customEmbedColor = await customEmbedColorSchema.findOne({Guild: interaction.guild.id})
         const embed = new EmbedBuilder()
             .setTitle(title)
             .setDescription(description)
-            .setColor(`${config.embedColor}`)
+            .setColor(`#${customEmbedColor ? customEmbedColor.Color : "000000"}`)
             .setFooter({
                 text: `Asgard ⚖ | Pour toute information, faites /botinfo`
             });

@@ -3,6 +3,7 @@ const { EmbedBuilder } = require('discord.js');
 const fs = require('fs');
 const path = require('path');
 const filePath = path.resolve(__dirname, '../../config.json');
+const customEmbedColorSchema = require('../../schemas/customEmbedColorDB')
 
 function jsonRead(filePath) {
     return new Promise((resolve, reject) => {
@@ -27,9 +28,10 @@ module.exports = {
         .setDescription("Affiche la liste des commandes !"),
     async execute(interation) {
         const config = await jsonRead(filePath);
+        const customEmbedColor = await customEmbedColorSchema.findOne({Guild: interation.guild.id})
         interation.reply({
             embeds : [new EmbedBuilder()
-                .setColor(`#${config.embedColor}`)
+                .setColor(`#${customEmbedColor ? customEmbedColor.Color : "000000"}`)
                 .setAuthor({
                   name:'ASGARD - AIDE',
                   iconURL:'https://i.ibb.co/mHdzBj5/GCd0-XNB-Imgur.png',

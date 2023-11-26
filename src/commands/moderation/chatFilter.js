@@ -3,8 +3,9 @@ const { EmbedBuilder } = require("discord.js");
 const fs = require('fs');
 const path = require('path');
 const filePath = path.resolve(__dirname, '../../config.json');
-const chatFilterSchema = require('../../db/chatFilterDB');
-const rolesBypassSchema = require('../../db/rolesBypassFilter');
+const chatFilterSchema = require('../../schemas/chatFilterDB');
+const rolesBypassSchema = require('../../schemas/rolesBypassFilterDB');
+const customEmbedColorSchema = require('../../schemas/customEmbedColorDB')
 
 function jsonRead(filePath) {
     return new Promise((resolve, reject) => {
@@ -84,8 +85,8 @@ module.exports = {
         const config = await jsonRead(filePath);
         const subCommand = interaction.options.getSubcommand();
 
-        const wordsList = await chatFilterSchema.find();
-        const roleBypassList = await rolesBypassSchema.find();
+        const wordsList = await chatFilterSchema.find({ Guild: interaction.guild.id });
+        const roleBypassList = await rolesBypassSchema.find({ Guild: interaction.guild.id });
 
         if (config.stateModuleModeration === '🔴'){
             interaction.reply({
@@ -112,30 +113,36 @@ module.exports = {
         else 
         {
             const subCommand = interaction.options.getSubcommand();
+            const customEmbedColor = await customEmbedColorSchema.findOne({Guild: interaction.guild.id})
             if(subCommand === 'liste'){
 
                 var wordValues = [];
                 await wordsList.forEach(async w => {
-                    wordValues.push(w.word);
+                    wordValues.push(w.Word);
                 })
 
                 var roleBypassValues = [];
                 await roleBypassList.forEach(async r => {
-                    roleBypassValues.push(r.roleID)
+                    roleBypassValues.push(r.RoleID)
                 })
+
+                const roleNames = roleBypassValues.map(roleId => {
+                    const role = interaction.guild.roles.cache.get(roleId);
+                    return role ? role.name : 'Role introuvable';
+                });
 
                 interaction.reply({
                     embeds: [ new EmbedBuilder()
-                        .setColor(`#${config.embedColor}`)
+                        .setColor(`#${customEmbedColor ? customEmbedColor.Color : "000000"}`)
                         .setTitle('Liste des mots interdits et des rôles exemptés du filtre')
-                        .setDescription(`**Mots interdits :**\n${wordValues.join('\n')}\n\n**Rôles exemptés :**\n${roleBypassValues.map(role => role.name).join('\n')}`)
+                        .setDescription(`**Mots interdits :**\n${wordValues.join('\n')}\n\n**Rôles exemptés :**\n${roleNames.join('\n')}`)
                         .setFooter({
                             text: "Asgard ⚖ | Pour toute information, faites /botinfo",
                         })],
             })}
             else if (subCommand === 'ajoutermot'){
                 const wordToAdd = interaction.options.getString('mot');
-                if (await chatFilterSchema.findOne({word: wordToAdd})){
+                if (await chatFilterSchema.findOne({Guild: interaction.guild.id, Word: wordToAdd})){
                     interaction.reply({
                         embeds: [ new EmbedBuilder()
                             .setColor('#FF0000')
@@ -148,7 +155,8 @@ module.exports = {
                 }
                 else{
                     await chatFilterSchema.create({
-                        word: wordToAdd
+                        Guild: interaction.guild.id,
+                        Word: wordToAdd
                     })
 
                     interaction.reply({
@@ -163,7 +171,8 @@ module.exports = {
             }
             else if (subCommand === 'retirermot'){
                 const wordToDelete = interaction.options.getString('mot');
-                if (!chatFilterSchema.findOne({word: wordToDelete})){
+                const existingWord = await chatFilterSchema.findOne({ Guild: interaction.guild.id, Word: wordToDelete });
+                if (!existingWord){
                     interaction.reply({
                         embeds: [ new EmbedBuilder()
                             .setColor('#FF0000')
@@ -176,13 +185,13 @@ module.exports = {
                 }
                 else{
                     await wordsList.forEach(async w => {
-                        await chatFilterSchema.deleteOne({word: wordToDelete});
+                        await chatFilterSchema.deleteOne({Guild: interaction.guild.id, Word: wordToDelete});
                     })
 
                     interaction.reply({
                         embeds: [ new EmbedBuilder()
                             .setColor('00FF00')
-                            .setDescription(`**[✅] Le mot \`${word}\`** a été retiré de la liste des mots interdits.`)
+                            .setDescription(`**[✅] Le mot \`${wordToDelete}\`** a été retiré de la liste des mots interdits.`)
                             .setFooter({ 
                                 text: "Asgard ⚖ | Pour toute information, faites /botinfo",
                             })],
@@ -190,8 +199,8 @@ module.exports = {
                 }
             }
             else if (subCommand === 'ajouterrole'){
-                const roleToAdd = interaction.options.getString('role');
-                if (await chatFilterSchema.findOne({roleID: roleToAdd})){
+                const roleToAdd = interaction.options.getRole('role');
+                if (await rolesBypassSchema.findOne({Guild: interaction.guild.id, RoleID: roleToAdd.id})){
                     interaction.reply({
                         embeds: [ new EmbedBuilder()
                             .setColor('#FF0000')
@@ -204,10 +213,10 @@ module.exports = {
                 }
                 else
                 {
-                    await chatFilterSchema.create({
-                        roleID: role.id
+                    await rolesBypassSchema.create({
+                        Guild: interaction.guild.id,
+                        RoleID: roleToAdd.id
                     })
-                    jsonWrite(filePath, config);
                     interaction.reply({
                         embeds: [ new EmbedBuilder()
                             .setColor('00FF00')
@@ -219,8 +228,9 @@ module.exports = {
                 }
             }
             else if (subCommand === 'retirerrole'){
-                const roleToDelete = interaction.options.getString('role');
-                if (await roleBypassList.findOne({roleID: roleToDelete})){
+                const roleToDelete = interaction.options.getRole('role');
+                const existingRole = await rolesBypassSchema.findOne({ Guild: interaction.guild.id, RoleID: roleToDelete.id });
+                if (!existingRole){
                     interaction.reply({
                         embeds: [ new EmbedBuilder()
                             .setColor('#FF0000')
@@ -234,7 +244,7 @@ module.exports = {
                 else
                 {
                     await roleBypassList.forEach(async r => {
-                        await rolesBypassSchema.deleteOne({roleID: roleToDelete});
+                        await rolesBypassSchema.deleteOne({Guild: interaction.guild.id, RoleID: roleToDelete.id});
                     })
 
                     interaction.reply({

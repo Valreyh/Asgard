@@ -1,7 +1,8 @@
 const { Schema, model } = require('mongoose');
 
 let chatFilter = new Schema({
-    word: String
+    Guild: String,
+    Word: String
 });
 
 module.exports = model('dbChatFilter', chatFilter);
